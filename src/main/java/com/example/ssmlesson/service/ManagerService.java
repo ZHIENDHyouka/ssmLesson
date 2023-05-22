@@ -17,7 +17,7 @@ public class ManagerService {
         String pwd = null;
         //根据管理员id查询管理员信息
         Manager manager =managerDAO.selectManager(managerName);
-        pwd = manager == null ? null : manager.getManagerPsw();
+        pwd = manager == null ? null : manager.getPassword();
 
         if (pwd == null) {// 账号为空时，密码为空。查询失败
             return new ResultVO(1, "账号错误", null);

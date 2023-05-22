@@ -1,0 +1,42 @@
+.loginContainer {
+    /*圆角*/
+    border-radius: 15px;
+    background-clip: padding-box;
+    margin: 180px auto;
+    width: 350px;
+    padding: 15px 35px 15px 35px;
+    background-color: rgba(85, 0, 0, 0);
+    border: 1px solid azure;
+    box-shadow: 0 0 25px rgba(222, 187, 195, 1);
+    border-color: lavenderblush;
+}
+
+.loginTitle {
+    margin: 0px auto 20px auto;
+    text-align: center;
+}
+
+.loginRemember {
+    text-align: left;
+    margin: 0px 0px 15px 0px;
+}
+
+.loginbackgroundImg {
+    width: 100%;
+    height: 100%;
+    /*background-image: url("img/dinner.jpg");*/
+    /* background: lavenderblush; */
+    /*使div占满整个屏幕*/
+    position: fixed;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+
+/*input输入框变成透明*/
+/deep/ .el-input__inner {
+    background-color: transparent !important;
+    border: 1px solid #1296db;
+}
+
+/*input { !*背景透明*! background-color: transparent; !*去边框*! border: 0; !*去外边框*! outline: none; !*文本颜色*! color: white; }*/

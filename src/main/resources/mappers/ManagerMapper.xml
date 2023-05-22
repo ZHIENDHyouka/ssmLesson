@@ -5,8 +5,8 @@
 <mapper namespace="com.example.ssmlesson.dao.ManagerDAO">
     <resultMap id="managerMap" type="com.example.ssmlesson.pojo.Manager">
         <id column="m_id" property="managerId"></id>
-        <result column="m_name" property="managerName"></result>
-        <result column="m_psw" property="managerPsw"></result>
+        <result column="m_name" property="username"></result>
+        <result column="m_psw" property="password"></result>
         <result column="m_realname" property="managerRealName"></result>
 
     </resultMap>
@@ -14,7 +14,7 @@
     <select id="selectManager" resultMap="managerMap">
         select *
         from manager
-        where m_name = #{managerName}
+        where m_name = #{username}
 
     </select>
 
