@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.ssmlesson.dao.KqDAO">
+    <resultMap id="kqMap" type="com.example.ssmlesson.pojo.Kq">
+        <id column="k_id" property="kqId"></id>
+        <result column="e_id" property="empId"></result>
+        <result column="k_y" property="kqY"></result>
+        <result column="k_m" property="kqM"></result>
+        <result column="k_all" property="kqAll"></result>
+
+    </resultMap>
+    <insert id="insertKq">
+        insert into kq(e_id,
+                       k_y,
+                       k_m,
+                       k_all
+                       )
+        values (#{empId},
+                #{kqY},
+                #{kqM},
+                #{kqAll}
+                )
+    </insert>
+
+    <delete id="deleteKq">
+        delete
+        from kq
+        where k_id = #{kqId};
+
+    </delete>
+
+
+    <select id="selectKq" resultMap="kqMap">
+        select *
+        from kq
+        where k_id = #{kqId};
+    </select>
+    <select id="selectKqList" resultMap="kqMap">
+        select *
+        from kq limit #{s},#{l}
+    </select>
+
+    <select id="selectCount" resultType="int">
+        select count(1)
+        from kq;
+    </select>
+
+
+</mapper>

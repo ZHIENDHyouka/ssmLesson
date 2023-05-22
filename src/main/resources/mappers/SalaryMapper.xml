@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.ssmlesson.dao.SalaryDAO">
+    <resultMap id="salaryMap" type="com.example.ssmlesson.pojo.Salary">
+        <id column="s_id" property="salaryId"></id>
+        <result column="e_id" property="empId"></result>
+        <result column="k_id" property="kqId"></result>
+        <result column="s_all" property="salaryAll"></result>
+
+    </resultMap>
+    <insert id="insertS">
+        insert into salary(e_id,
+                           k_id,
+                           s_all)
+        values (#{empId},
+                #{kqId},
+                #{salaryAll})
+
+    </insert>
+
+    <delete id="deleteS">
+        delete
+        from salary
+        where s_id = #{salaryId};
+
+    </delete>
+
+    <select id="selectS" resultMap="salaryMap">
+        select *
+        from salary
+        where s_id = #{salaryId};
+    </select>
+    <select id="selectSList" resultMap="salaryMap">
+        select *
+        from salary limit #{s},#{l}
+    </select>
+
+    <select id="selectCount" resultType="int">
+        select count(1)
+        from salary;
+    </select>
+
+
+</mapper>

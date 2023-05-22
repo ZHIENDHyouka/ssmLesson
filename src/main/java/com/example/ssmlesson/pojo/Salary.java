@@ -10,8 +10,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 
-public class salary {
+public class Salary {
     private int salaryId;
     private int empId;
+    private int kqId;
     private float salaryAll;//实发工资
 }

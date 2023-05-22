@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.ssmlesson.dao.PostDAO">
+    <resultMap id="postMap" type="com.example.ssmlesson.pojo.Post">
+        <id column="p_id" property="postId"></id>
+        <result column="dep_id" property="depId"></result>
+        <result column="p_name" property="postName"></result>
+        <result column="p_remark" property="postRemark"></result>
+        <result column="p_money" property="postMoney"></result>
+
+    </resultMap>
+    <insert id="insertPost">
+        insert into post(p_id,
+                         dep_id,
+                         p_name,
+                         p_remark,
+                         p_money)
+        values (#{postId},
+                #{depId},
+                #{postName},
+                #{postRemark},
+                #{postMoney})
+
+    </insert>
+    <delete id="deletePost">
+        delete
+        from post
+        where p_id = #{postId};
+
+    </delete>
+    <update id="updatePostRemark">
+        update post
+        set p_remark= #{r}
+        where p_id = #{i};
+    </update>
+
+    <update id="updatePostMoney">
+        update post
+        set p_money= #{m}
+        where p_id = #{i};
+    </update>
+
+
+    <select id="selectPost" resultMap="postMap">
+        select *
+        from post
+        where p_id = #{postId};
+
+
+    </select>
+
+    <select id="selectPostList" resultMap="postMap">
+        select *
+        from post limit #{s},#{l}
+    </select>
+
+    <select id="selectCount" resultType="int">
+        select count(1)
+        from post;
+    </select>
+
+
+</mapper>

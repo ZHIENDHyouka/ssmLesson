@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.ssmlesson.dao.EmpDAO">
+    <resultMap id="empMap" type="com.example.ssmlesson.pojo.Emp">
+        <id column="e_id" property="empId"></id>
+        <result column="p_id" property="postId"></result>
+        <result column="t_id" property="titleId"></result>
+        <result column="e_name" property="empName"></result>
+        <result column="e_sex" property="empSex"></result>
+        <result column="e_age" property="empAge"></result>
+        <result column="e_time" property="empTime"></result>
+
+    </resultMap>
+
+    <insert id="insertEmp">
+        insert into emp(e_id,
+                        p_id,
+                        t_id,
+                        e_name,
+                        e_sex,
+                        e_age,
+                        e_time)
+        values (#{empId},
+                #{postId},
+                #{titleId},
+                #{empName},
+                #{empSex},
+                #{empAge},
+                #{empTime})
+
+    </insert>
+    <delete id="deleteEmp">
+        delete
+        from emp
+        where e_id = #{empId};
+
+    </delete>
+
+    <update id="updateTitle">
+        update emp
+        set t_id = #{t}
+        where e_id = #{e};
+    </update>
+
+    <update id="updatePost">
+        update emp
+        set p_id = #{p}
+        where e_id = #{e};
+    </update>
+
+    <select id="selectEmp" resultMap="empMap">
+        select *
+        from emp
+        where e_id = #{empId}
+    </select>
+
+    <select id="selectEmpList" resultMap="empMap">
+        select *
+        from emp limit #{s},#{l}
+    </select>
+
+    <select id="selectCount" resultType="int">
+        select count(1)
+        from emp;
+    </select>
+
+
+</mapper>

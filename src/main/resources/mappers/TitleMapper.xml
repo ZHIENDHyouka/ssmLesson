@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.ssmlesson.dao.TitleDAO">
+    <resultMap id="titleMap" type="com.example.ssmlesson.pojo.Title">
+        <id column="t_id" property="titleId"></id>
+        <result column="t_name" property="titleName"></result>
+        <result column="t_remark" property="titleRemark"></result>
+        <result column="t_money" property="titleMoney"></result>
+
+    </resultMap>
+    <insert id="insertTitle">
+        insert into title(t_id,
+                        t_name,
+                        t_remark,
+                        t_money)
+        values (#{titleId},
+                #{titleName},
+                #{titleRemark},
+                #{titleMoney})
+
+    </insert>
+
+    <delete id="deleteTitle">
+        delete
+        from title
+        where t_id = #{titleId};
+
+    </delete>
+
+    <update id="updateTitleRemark">
+        update title
+        set t_remark= #{r}
+        where t_id = #{i};
+    </update>
+
+    <update id="updateTitleMoney">
+        update title
+        set t_money= #{m}
+        where t_id = #{i};
+    </update>
+
+    <select id="selectTitle" resultMap="titleMap">
+        select *
+        from title
+        where t_id = #{titleId};
+    </select>
+    <select id="selectTitleList" resultMap="titleMap">
+        select *
+        from title limit #{s},#{l}
+    </select>
+
+    <select id="selectCount" resultType="int">
+        select count(1)
+        from title;
+    </select>
+
+
+</mapper>

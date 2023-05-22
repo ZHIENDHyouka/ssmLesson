@@ -1,7 +1,7 @@
 package com.example.ssmlesson.service;
 
-import com.example.ssmlesson.dao.DepDAO;
-import com.example.ssmlesson.pojo.Dep;
+import com.example.ssmlesson.dao.KqDAO;
+import com.example.ssmlesson.pojo.Kq;
 import com.example.ssmlesson.pojo.PageVO;
 import com.example.ssmlesson.pojo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class DepService {
+public class KqService {
+
     @Autowired
-    private DepDAO depDAO;
+    private KqDAO kqDAO;
 
-    public ResultVO addDep(Dep dep) {
-        int a = depDAO.insertDep(dep);
+    public ResultVO addKq(Kq kq) {
+        int a = kqDAO.insertKq(kq);
         if (a > 0) {
             return new ResultVO(0, "成功", null);
         }
@@ -26,63 +27,52 @@ public class DepService {
 
     }
 
-    public ResultVO deleteDep(int depId){
-        int a = depDAO.deleteDep(depId);
+    public ResultVO deleteKq(int kqId){
+        int a = kqDAO.deleteKq(kqId);
         if (a > 0) {
             return new ResultVO(0, "成功", null);
         }
         return new ResultVO(0, "失败", null);
     }
 
-    public ResultVO updateDepRemark(int depId,String depRemark){
-        int a =   depDAO.updateDepRemark(depId,depRemark);
-        if (a > 0) {
-            return new ResultVO(0, "成功", null);
-        }
-        return new ResultVO(0, "失败", null);
-    }
 
-    public ResultVO updateDepMoney(int depId,float depMoney){
-        int a =   depDAO.updateDepMoney(depId,depMoney);
-        if (a > 0) {
-            return new ResultVO(0, "成功", null);
-        }
-        return new ResultVO(0, "失败", null);
-    }
-
-    public ResultVO selectDep(int depId){
+    public ResultVO selectKq(int kqId){
         try {
-            Dep dep =depDAO.selectDep(depId);
-            return new ResultVO(0, "成功", dep);
+            Kq kq =kqDAO.selectKq(kqId);
+            return new ResultVO(0, "成功", kq);
         } catch (Exception e) {
             return new ResultVO(1, "失败", null);
         }
 
     }
-    public PageVO selectDepList(int page,int limit){
+    public PageVO selectKqList(int page, int limit){
         int start= (page-1)*limit;
-        List<Dep> list = depDAO.selectDepList(start,limit);
+        List<Kq> list = kqDAO.selectKqList(start,limit);
 
         ArrayList<Map<String, Object>> headList = new ArrayList<>();
         HashMap<String, Object> headMap = new HashMap<>();
-        headMap.put("id", "depName");
-        headMap.put("name", "部门名称");
+        headMap.put("id", "empId");
+        headMap.put("name", "员工id");
         HashMap<String, Object> headMap1 = new HashMap<>();
-        headMap1.put("id", "depRemark");
-        headMap1.put("name", "部门说明");
+        headMap1.put("id", "kqY");
+        headMap1.put("name", "年");
         HashMap<String, Object> headMap2 = new HashMap<>();
-        headMap2.put("id", "depMoney");
-        headMap2.put("name", "部门工资");
+        headMap2.put("id", "kqM");
+        headMap2.put("name", "月");
+        HashMap<String, Object> headMap3 = new HashMap<>();
+        headMap3.put("id", "kqAll");
+        headMap3.put("name", "异常统计");
 
         headList.add(headMap);
         headList.add(headMap1);
         headList.add(headMap2);
+        headList.add(headMap3);
 
         HashMap<String, Object> result = new HashMap<>();
 
         result.put("head",headList);
         result.put("data",list);
-        int count=depDAO.selectCount();
+        int count=kqDAO.selectCount();
         PageVO pageVO=new PageVO(0,"查询成功",result,count);
         return pageVO;
     }

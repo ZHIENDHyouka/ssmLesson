@@ -12,7 +12,7 @@ import lombok.ToString;
 
 public class Post {
     private int postId;
-    private int deptId;
+    private int depId;
     private String postName;
     private String postRemark;
     private float postMoney;//岗位工资

@@ -13,7 +13,7 @@ import lombok.ToString;
 public class Emp {
     private  int empId;
     private  int postId;
-    private  int titleID;
+    private  int titleId;
     private  String empName;
     private  int empSex;
     private  int empAge;

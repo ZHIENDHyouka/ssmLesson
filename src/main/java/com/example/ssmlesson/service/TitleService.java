@@ -1,7 +1,7 @@
 package com.example.ssmlesson.service;
 
-import com.example.ssmlesson.dao.DepDAO;
-import com.example.ssmlesson.pojo.Dep;
+import com.example.ssmlesson.dao.TitleDAO;
+import com.example.ssmlesson.pojo.Title;
 import com.example.ssmlesson.pojo.PageVO;
 import com.example.ssmlesson.pojo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class DepService {
+public class TitleService {
     @Autowired
-    private DepDAO depDAO;
+    private TitleDAO titleDAO;
 
-    public ResultVO addDep(Dep dep) {
-        int a = depDAO.insertDep(dep);
+    public ResultVO addTitle(Title title) {
+        int a = titleDAO.insertTitle(title);
         if (a > 0) {
             return new ResultVO(0, "成功", null);
         }
@@ -26,53 +26,53 @@ public class DepService {
 
     }
 
-    public ResultVO deleteDep(int depId){
-        int a = depDAO.deleteDep(depId);
+    public ResultVO deleteTitle(int titleId){
+        int a = titleDAO.deleteTitle(titleId);
         if (a > 0) {
             return new ResultVO(0, "成功", null);
         }
         return new ResultVO(0, "失败", null);
     }
 
-    public ResultVO updateDepRemark(int depId,String depRemark){
-        int a =   depDAO.updateDepRemark(depId,depRemark);
+    public ResultVO updateTitleRemark(int titleId,String titleRemark){
+        int a =   titleDAO.updateTitleRemark(titleId,titleRemark);
         if (a > 0) {
             return new ResultVO(0, "成功", null);
         }
         return new ResultVO(0, "失败", null);
     }
 
-    public ResultVO updateDepMoney(int depId,float depMoney){
-        int a =   depDAO.updateDepMoney(depId,depMoney);
+    public ResultVO updateTitleMoney(int titleId,float titleMoney){
+        int a =   titleDAO.updateTitleMoney(titleId,titleMoney);
         if (a > 0) {
             return new ResultVO(0, "成功", null);
         }
         return new ResultVO(0, "失败", null);
     }
 
-    public ResultVO selectDep(int depId){
+    public ResultVO selectTitle(int titleId){
         try {
-            Dep dep =depDAO.selectDep(depId);
-            return new ResultVO(0, "成功", dep);
+            Title title =titleDAO.selectTitle(titleId);
+            return new ResultVO(0, "成功", title);
         } catch (Exception e) {
             return new ResultVO(1, "失败", null);
         }
 
     }
-    public PageVO selectDepList(int page,int limit){
+    public PageVO selectTitleList(int page, int limit){
         int start= (page-1)*limit;
-        List<Dep> list = depDAO.selectDepList(start,limit);
+        List<Title> list = titleDAO.selectTitleList(start,limit);
 
         ArrayList<Map<String, Object>> headList = new ArrayList<>();
         HashMap<String, Object> headMap = new HashMap<>();
-        headMap.put("id", "depName");
-        headMap.put("name", "部门名称");
+        headMap.put("id", "titleName");
+        headMap.put("name", "职称名称");
         HashMap<String, Object> headMap1 = new HashMap<>();
-        headMap1.put("id", "depRemark");
-        headMap1.put("name", "部门说明");
+        headMap1.put("id", "titleRemark");
+        headMap1.put("name", "职称说明");
         HashMap<String, Object> headMap2 = new HashMap<>();
-        headMap2.put("id", "depMoney");
-        headMap2.put("name", "部门工资");
+        headMap2.put("id", "titleMoney");
+        headMap2.put("name", "职称工资");
 
         headList.add(headMap);
         headList.add(headMap1);
@@ -82,7 +82,7 @@ public class DepService {
 
         result.put("head",headList);
         result.put("data",list);
-        int count=depDAO.selectCount();
+        int count=titleDAO.selectCount();
         PageVO pageVO=new PageVO(0,"查询成功",result,count);
         return pageVO;
     }

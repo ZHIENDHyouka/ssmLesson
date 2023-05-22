@@ -10,7 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 
-public class title {
+public class Title {
     private int titleId;
     private String titleName;
     private String titleRemark;

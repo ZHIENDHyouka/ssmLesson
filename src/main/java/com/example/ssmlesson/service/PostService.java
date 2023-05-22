@@ -1,7 +1,7 @@
 package com.example.ssmlesson.service;
 
-import com.example.ssmlesson.dao.DepDAO;
-import com.example.ssmlesson.pojo.Dep;
+import com.example.ssmlesson.dao.PostDAO;
+import com.example.ssmlesson.pojo.Post;
 import com.example.ssmlesson.pojo.PageVO;
 import com.example.ssmlesson.pojo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class DepService {
+public class PostService {
     @Autowired
-    private DepDAO depDAO;
+    private PostDAO postDAO;
 
-    public ResultVO addDep(Dep dep) {
-        int a = depDAO.insertDep(dep);
+    public ResultVO addPost(Post post) {
+        int a = postDAO.insertPost(post);
         if (a > 0) {
             return new ResultVO(0, "成功", null);
         }
@@ -26,68 +26,69 @@ public class DepService {
 
     }
 
-    public ResultVO deleteDep(int depId){
-        int a = depDAO.deleteDep(depId);
+    public ResultVO deletePost(int postId){
+        int a = postDAO.deletePost(postId);
         if (a > 0) {
             return new ResultVO(0, "成功", null);
         }
         return new ResultVO(0, "失败", null);
     }
 
-    public ResultVO updateDepRemark(int depId,String depRemark){
-        int a =   depDAO.updateDepRemark(depId,depRemark);
+    public ResultVO updatePostRemark(int postId,String postRemark){
+        int a =   postDAO.updatePostRemark(postId,postRemark);
         if (a > 0) {
             return new ResultVO(0, "成功", null);
         }
         return new ResultVO(0, "失败", null);
     }
 
-    public ResultVO updateDepMoney(int depId,float depMoney){
-        int a =   depDAO.updateDepMoney(depId,depMoney);
+    public ResultVO updatePostMoney(int postId,float postMoney){
+        int a =   postDAO.updatePostMoney(postId,postMoney);
         if (a > 0) {
             return new ResultVO(0, "成功", null);
         }
         return new ResultVO(0, "失败", null);
     }
 
-    public ResultVO selectDep(int depId){
+    public ResultVO selectPost(int postId){
         try {
-            Dep dep =depDAO.selectDep(depId);
-            return new ResultVO(0, "成功", dep);
+            Post post =postDAO.selectPost(postId);
+            return new ResultVO(0, "成功", post);
         } catch (Exception e) {
             return new ResultVO(1, "失败", null);
         }
 
     }
-    public PageVO selectDepList(int page,int limit){
+    public PageVO selectPostList(int page, int limit){
         int start= (page-1)*limit;
-        List<Dep> list = depDAO.selectDepList(start,limit);
+        List<Post> list = postDAO.selectPostList(start,limit);
 
         ArrayList<Map<String, Object>> headList = new ArrayList<>();
         HashMap<String, Object> headMap = new HashMap<>();
-        headMap.put("id", "depName");
-        headMap.put("name", "部门名称");
+        headMap.put("id", "depId");
+        headMap.put("name", "部门编号");
         HashMap<String, Object> headMap1 = new HashMap<>();
-        headMap1.put("id", "depRemark");
-        headMap1.put("name", "部门说明");
+        headMap1.put("id", "postName");
+        headMap1.put("name", "岗位名称");
         HashMap<String, Object> headMap2 = new HashMap<>();
-        headMap2.put("id", "depMoney");
-        headMap2.put("name", "部门工资");
+        headMap2.put("id", "postRemark");
+        headMap2.put("name", "岗位说明");
+        HashMap<String, Object> headMap3 = new HashMap<>();
+        headMap3.put("id", "postMoney");
+        headMap3.put("name", "岗位工资");
 
         headList.add(headMap);
         headList.add(headMap1);
         headList.add(headMap2);
+        headList.add(headMap3);
 
         HashMap<String, Object> result = new HashMap<>();
 
         result.put("head",headList);
         result.put("data",list);
-        int count=depDAO.selectCount();
+        int count=postDAO.selectCount();
         PageVO pageVO=new PageVO(0,"查询成功",result,count);
         return pageVO;
     }
-
-
-
 
 }
