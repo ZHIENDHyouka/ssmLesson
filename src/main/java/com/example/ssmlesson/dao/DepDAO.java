@@ -16,6 +16,8 @@ public interface DepDAO {
     public Dep selectDep(int depId);
     public List<Dep> selectDepList(@Param("s")  int start , @Param("l") int limit);
     public int selectCount();
+    List<Dep> queryAllDepInfo();
+    int updateDepartment(@Param("dep") Dep dep);
 
 
 }

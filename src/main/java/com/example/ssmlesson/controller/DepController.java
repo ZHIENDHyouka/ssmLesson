@@ -5,9 +5,7 @@ import com.example.ssmlesson.pojo.PageVO;
 import com.example.ssmlesson.pojo.ResultVO;
 import com.example.ssmlesson.service.DepService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -23,9 +21,9 @@ public class DepController {
        return resultVO;
     }
     //http://localhost:8083/dep/del
-    @RequestMapping("/del")
-    public ResultVO deleteDep(int depId){
-        ResultVO resultVO= depService.deleteDep(depId);
+    @GetMapping("/del")
+    public ResultVO deleteDep(int id){
+        ResultVO resultVO= depService.deleteDep(id);
         return resultVO;
     }
     //http://localhost:8083/dep/udRemark
@@ -42,6 +40,12 @@ public class DepController {
         return resultVO;
     }
 
+    @PostMapping("/updateDepartmentInfo")
+    public ResultVO updateDepartmentInfo(@RequestBody Dep dep){
+        ResultVO resultVO = depService.updateDepartmentInfo(dep);
+        return resultVO;
+    }
+
     //http://localhost:8083/dep/selectDep
     @RequestMapping("/selectDep")
     public ResultVO selectDep(int depId){
@@ -53,6 +57,11 @@ public class DepController {
     public PageVO selectDepList(int page , int limit ){
         PageVO pageVo= depService.selectDepList(page,limit);
         return pageVo;
+    }
+
+    @GetMapping("/queryAllDepInfo")
+    public ResultVO queryAllDepInfo(){
+        return depService.queryAllDepInfo();
     }
 
 

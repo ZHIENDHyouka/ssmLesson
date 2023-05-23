@@ -41,6 +41,12 @@
         where dep_id = #{i};
     </update>
 
+    <update id="updateDepartment">
+        update dep
+        set dep_money= #{dep.depMoney}, dep_remark=#{dep.depRemark}
+        where dep_id = #{dep.depId};
+    </update>
+
     <select id="selectDep" resultMap="depMap">
         select *
         from dep
@@ -54,6 +60,9 @@
     <select id="selectCount" resultType="int">
         select count(1)
         from dep;
+    </select>
+    <select id="queryAllDepInfo" resultMap="depMap">
+        select * from dep;
     </select>
 
 
