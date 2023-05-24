@@ -19,7 +19,7 @@
                             <i class="el-icon-location"></i>
                             <span>部门管理</span>
                         </el-menu-item>
-                        <el-menu-item index="2">
+                        <el-menu-item index="2" @click="getAllPostInfo">
                             <i class="el-icon-menu"></i>
                             <span slot="title">岗位管理</span>
                         </el-menu-item>
@@ -45,8 +45,19 @@
         </el-aside>
         <el-container>
             <el-header class="mainHead">
-                <i class="el-icon-setting" style="margin-right: 15px"></i>
-                <span>水水水水</span>
+                <el-dropdown @command="managerAddFunc" trigger="click">
+                     <span class="el-dropdown-link">
+                         <i class="el-icon-setting" style="margin-right: 15px;size: 50px"></i>
+                         </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item icon="el-icon-plus" command="1">增加部门</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-plus" command="2">增加岗位</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-plus" command="3">螺蛳粉</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-plus" command="3">双皮奶</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-plus" command="4">蚵仔煎</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <span style="font-size: 15px">水水水水</span>
             </el-header>
             <el-main>
                 <el-table
@@ -70,7 +81,6 @@
 
             </el-main>
             <div class="page">
-                <!--                    <span class="demonstration">完整功能</span>-->
                 <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
@@ -109,6 +119,93 @@
             </el-form-item>
         </el-form>
     </el-dialog>
+    <el-dialog
+            title="添加部门"
+            :visible.sync="addDepartmentDialogShow"
+            width="40%"
+            :before-close="addDepartmentClose">
+        <el-form :model="addDepForm" :rules="addDeptRules" ref="addDepForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="部门名称：" prop="depName">
+                <el-input v-model="addDepForm.depName" placeholder="请输入部门名称" style="width: 175px"></el-input>
+            </el-form-item>
+            <el-form-item label="工资收入：" prop="depMoney">
+                <el-input v-model="addDepForm.depMoney" oninput="value=value.replace(/[^\d.]/g,'')"
+                          style="width: 150px" placeholder="请输入工资"></el-input>
+            </el-form-item>
+            <el-form-item label="部门介绍：" prop="depRemark">
+                <el-input style="width:400px"
+                          type="textarea"
+                          :rows="2"
+                          :autosize="{ minRows: 2, maxRows: 2}"
+                          placeholder="请输入内容"
+                          v-model="addDepForm.depRemark">
+                </el-input>
+            </el-form-item>
+        </el-form>
+        <el-button type="primary" @click="addDepartment('addDepForm')">添加</el-button>
+    </el-dialog>
+    <el-dialog
+            title="岗位修改"
+            :visible.sync="showPost"
+            width="40%"
+            :before-close="closePostDialog">
+        <el-form :model="changePostInfo" ref="postRuleForm" label-width="100px">
+            <el-form-item label="岗位工资：" >
+                <el-input style="width: 150px;" v-model="changePostInfo.postMoney" placeholder="请输入工资"
+                          oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
+            </el-form-item>
+            <el-form-item label="岗位介绍：" >
+                <el-input style="width:400px"
+                          type="textarea"
+                          :rows="2"
+                          :autosize="{ minRows: 2, maxRows: 2}"
+                          placeholder="请输入内容"
+                          v-model="changePostInfo.postRemark">
+                </el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="postChange">修改</el-button>
+                <el-button @click="postReset">重置</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+
+    <el-dialog
+            title="添加岗位"
+            :visible.sync="addPostDialogShow"
+            width="40%"
+            :before-close="addPostClose">
+        <el-form :model="addPostForm" :rules="addPostRules" ref="addPostForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="岗位名称：" prop="postName">
+                <el-input v-model="addPostForm.postName" placeholder="请输入岗位名称" style="width: 175px"></el-input>
+            </el-form-item>
+            <el-form-item label="部门选择：" prop="depId">
+                <el-select v-model="addPostForm.depId" clearable placeholder="请选择" style="width: 225px">
+                    <el-option
+                            v-for="item in deptList"
+                            :key="item.value"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="工资收入：" prop="postMoney">
+                <el-input v-model="addPostForm.postMoney" oninput="value=value.replace(/[^\d.]/g,'')"
+                          style="width: 150px" placeholder="请输入工资"></el-input>
+            </el-form-item>
+            <el-form-item label="岗位介绍：" prop="postRemark">
+                <el-input style="width:400px"
+                          type="textarea"
+                          :rows="2"
+                          :autosize="{ minRows: 2, maxRows: 2}"
+                          placeholder="请输入内容"
+                          v-model="addPostForm.postRemark">
+                </el-input>
+            </el-form-item>
+        </el-form>
+        <el-button type="primary" @click="addPost('addPostForm')">添加</el-button>
+    </el-dialog>
+
 </div>
 
 <!-- vue -->
@@ -148,8 +245,55 @@
                 changeDeptInfo: {
                     depRemark: '',
                     depMoney: 0,
+                    depId: null,
+                },
+                changePostInfo: {
+                    postRemark: '',
+                    postMoney: 0,
+                    postId: null,
                 },
                 tableRow: null,
+                addDepartmentDialogShow: false,
+                addDepForm: {
+                    depName: '',
+                    depRemark: '',
+                    depMoney: null,
+                },
+                addDeptRules: {
+                    depName: [{
+                        required: true, message: '请输入部门名称', trigger: 'blur'
+                    }],
+                    depMoney: [{
+                        required: true, message: '请输入工资', trigger: 'blur'
+                    }],
+                    depRemark: [{
+                        required: true, message: '请输入部门介绍', trigger: 'blur'
+                    }]
+                },
+                addPostRules: {
+                    postName: [{
+                        required: true, message: '请输入岗位名称', trigger: 'blur'
+                    }],
+                    depId: [{
+                        required: true, message: '请选择部门', trigger: 'blur'
+                    }],
+                    postMoney: [{
+                        required: true, message: '请输入工资', trigger: 'blur'
+                    }],
+                    postRemark: [{
+                        required: true, message: '请输入部门介绍', trigger: 'blur'
+                    }]
+                },
+                showPost: false,
+                addPostDialogShow: false,
+                addPostForm: {
+                    postRemark: '',
+                    postMoney: null,
+                    postId: null,
+                    postName: '',
+                    depId: null,
+                },
+                deptList: [],
 
             };
         },
@@ -190,6 +334,7 @@
             tableChange(row) {
                 this.tableRow = row;
                 if (this.index === 1) this.showDepartmentDialog(row);
+                if (this.index === 2) this.showPostDialog(row);
             },
             tableDelete(row) {
                 this.$confirm('此操作将永久删除, 是否继续?', '提示', {
@@ -198,6 +343,7 @@
                     type: 'warning'
                 }).then(() => {
                     if (this.index === 1) this.deleteDepartment(row);
+                    if (this.index === 2) this.deletePost(row);
                 }).catch(() => {
                 });
 
@@ -252,10 +398,156 @@
                         });
                     }
                 });
-
             },
             closeDeptDialog() {
                 this.showDept = false;
+            },
+            managerAddFunc(command) {
+                if (command === '1') this.addDepartmentDialogShow = true;
+                if (command==='2') this.addPostDialog();
+            },
+            addDepartmentClose() {
+                this.addDepartmentDialogShow = false;
+                this.addDepForm.depMoney = null;
+                this.addDepForm.depName = '';
+                this.addDepForm.depRemark = '';
+            },
+            addDepartment(ref) {
+                this.$refs[ref].validate((valid) => {
+                    if (valid) {
+                        const _this = this;
+                        axios({
+                            url: `${_this.url}/dep/add`,
+                            method: 'post',
+                            data: _this.addDepForm
+                        }).then(function (res) {
+                            const code = res.data.code;
+                            if (code !== 1) {
+                                _this.$message.success('添加成功!');
+                                _this.getDepartmentInfo(_this.currentPage);
+                                _this.addDepartmentDialogShow = false;
+                            } else {
+                                _this.$message.error('添加失败！！');
+                            }
+                        })
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            getAllPostInfo(currentPage) {
+                this.index = 2;
+                if (!currentPage) {
+                    this.pageInit();
+                }
+                const _this = this;
+                axios({
+                    url: `${_this.url}/post/queryAllPostInfo`,
+                    method: 'get'
+                }).then(function (res) {
+                    _this.tableData = res.data.data.dataList;
+                    _this.tableHead = res.data.data.headList;
+                    if (_this.tableData.length === 0) {
+                        _this.$message.warning("暂无数据!");
+                    }
+                });
+            },
+            postReset() {
+                this.changePostInfo.postMoney = this.tableRow.postMoney;
+                this.changePostInfo.postRemark = this.tableRow.postRemark;
+            },
+            showPostDialog(row) {
+                this.changePostInfo.postMoney = row.postMoney;
+                this.changePostInfo.postRemark = row.postRemark;
+                this.changePostInfo.postId = row.postId;
+                this.showPost = true;
+                console.log(row);
+            },
+            postChange() {
+                const _this =this;
+                axios({
+                    url:`${_this.url}/post/updatePostInfo`,
+                    method:'post',
+                    data:_this.changePostInfo
+                }).then(function (res){
+                    const code  = res.data.code;
+                    if (code!==1){
+                        _this.$message.success(res.data.msg);
+                        _this.getAllPostInfo(_this.currentPage);
+                        _this.showPost=false;
+                    }else {
+                        _this.$message.error('修改失败!');
+                    }
+                });
+            },
+            closePostDialog() {
+                this.showPost = false;
+            },
+            deletePost(row) {
+                const _this = this;
+                axios({
+                    url: `${_this.url}/post/del?id=${row.postId}`,
+                    method: 'get'
+                }).then(function (res) {
+                    const code = res.data.code
+                    if (code !== 1) {
+                        _this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        _this.getAllPostInfo(_this.currentPage);
+                    } else {
+                        _this.$message({
+                            type: 'error',
+                            message: '删除失败捏，有bug呢!'
+                        });
+                    }
+                });
+            },
+            addPostClose() {
+                this.addPostDialogShow = false;
+                this.addPostForm.postMoney = null;
+                this.addPostForm.postName = '';
+                this.addPostForm.postRemark = '';
+                this.addPostForm.depId = null;
+            },
+            addPostDialog(){
+                const _this=this;
+                _this.addPostDialogShow=true;
+                axios({
+                    url:`${_this.url}/dep/queryAllDeptNameAndId`,
+                    method:'get'
+                }).then(function (res){
+                    const code = res.data.code;
+                    if (code!=1){
+                        _this.deptList=res.data.data;
+                        _this.addPostDialogShow=true;
+                    }else {
+                        _this.$message.error(res.data.msg);
+                    }
+                });
+            },
+            addPost(ref) {
+                this.$refs[ref].validate((valid) => {
+                    if (valid) {
+                        const _this = this;
+                        axios({
+                            url:`${_this.url}/post/add`,
+                            method:'post',
+                            data:_this.addPostForm,
+                        }).then(function (res){
+                            const code = res.data.code;
+                            if (code!==1){
+                                _this.$message.success("添加成功!");
+                                _this.getAllPostInfo(_this.currentPage);
+                            }else {
+                                _this.$message.error("添加失败捏 好像有bUG");
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
             }
         }
     })

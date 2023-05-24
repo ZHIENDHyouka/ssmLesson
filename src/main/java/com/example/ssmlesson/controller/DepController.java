@@ -16,7 +16,7 @@ public class DepController {
 
     //http://localhost:8083/dep/add
     @RequestMapping("/add")
-    public ResultVO addDep(Dep dep){
+    public ResultVO addDep(@RequestBody Dep dep){
        ResultVO resultVO= depService.addDep(dep);
        return resultVO;
     }
@@ -64,6 +64,11 @@ public class DepController {
         return depService.queryAllDepInfo();
     }
 
+    @GetMapping("/queryAllDeptNameAndId")
+    public ResultVO queryAllDeptNameAndId(){
+        ResultVO resultVO = depService.queryAllDeptNameAndId();
+        return resultVO;
+    }
 
 
 }

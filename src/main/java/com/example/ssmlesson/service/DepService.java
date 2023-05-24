@@ -115,5 +115,15 @@ public class DepService {
         return new ResultVO(1, "修改失败捏，好像有bug了呢", null);
     }
 
+    public ResultVO queryAllDeptNameAndId(){
+        List<Map<String, Object>> maps = depDAO.queryDeptNameAndId();
+        int code=0;
+        String msg = "获取数据成功";
+        if (!(maps.size()>0)) {
+            code = 1;
+            msg="数据获取失败，好像有bug捏";
+        }
+        return new ResultVO(code,msg,maps);
+    }
 
 }

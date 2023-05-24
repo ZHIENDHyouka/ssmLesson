@@ -1,6 +1,7 @@
 package com.example.ssmlesson.dao;
 
 import com.example.ssmlesson.pojo.Post;
+import javafx.geometry.Pos;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,6 +16,8 @@ public interface PostDAO {
     public Post selectPost(int postId);
     public List<Post> selectPostList(@Param("s")  int start , @Param("l") int limit);
     public int selectCount();
+    List<Post> queryAllPostInfo();
+    int updatePostInfo(@Param("post")Post post);
 
 
 }

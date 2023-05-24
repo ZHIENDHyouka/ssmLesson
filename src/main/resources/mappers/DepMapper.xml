@@ -11,12 +11,11 @@
 
     </resultMap>
     <insert id="insertDep">
-        insert into dep(dep_id,
+        insert into dep(
                         dep_name,
                         dep_remark,
                         dep_money)
-        values (#{depId},
-                #{depName},
+        values ( #{depName},
                 #{depRemark},
                 #{depMoney})
 
@@ -63,6 +62,9 @@
     </select>
     <select id="queryAllDepInfo" resultMap="depMap">
         select * from dep;
+    </select>
+    <select id="queryDeptNameAndId" resultType="java.util.Map">
+        select dep_id id , dep_name name from dep;
     </select>
 
 

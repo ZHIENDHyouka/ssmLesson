@@ -12,13 +12,11 @@
 
     </resultMap>
     <insert id="insertPost">
-        insert into post(p_id,
-                         dep_id,
+        insert into post(dep_id,
                          p_name,
                          p_remark,
                          p_money)
-        values (#{postId},
-                #{depId},
+        values (#{depId},
                 #{postName},
                 #{postRemark},
                 #{postMoney})
@@ -41,6 +39,12 @@
         set p_money= #{m}
         where p_id = #{i};
     </update>
+    <update id="updatePostInfo">
+        update post
+        set p_money  = #{post.postMoney},
+            p_remark = #{post.postRemark}
+        where p_id = #{post.postId};
+    </update>
 
 
     <select id="selectPost" resultMap="postMap">
@@ -58,6 +62,10 @@
 
     <select id="selectCount" resultType="int">
         select count(1)
+        from post;
+    </select>
+    <select id="queryAllPostInfo" resultMap="postMap">
+        select *
         from post;
     </select>
 

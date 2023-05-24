@@ -91,4 +91,37 @@ public class PostService {
         return pageVO;
     }
 
+    public ResultVO queryAllPostInfo(){
+        List<Post> dataList = postDAO.queryAllPostInfo();
+        ArrayList<Map<String, Object>> headList = new ArrayList<>();
+        HashMap<String, Object> headMap = new HashMap<>();
+        headMap.put("id", "postId");
+        headMap.put("name", "岗位编号");
+        HashMap<String, Object> headMap1 = new HashMap<>();
+        headMap1.put("id", "postName");
+        headMap1.put("name", "岗位名称");
+        HashMap<String, Object> headMap2 = new HashMap<>();
+        headMap2.put("id", "postRemark");
+        headMap2.put("name", "岗位说明");
+        HashMap<String, Object> headMap3 = new HashMap<>();
+        headMap3.put("id", "postMoney");
+        headMap3.put("name", "岗位工资");
+
+        headList.add(headMap);
+        headList.add(headMap1);
+        headList.add(headMap2);
+        headList.add(headMap3);
+
+        HashMap<String, Object> result = new HashMap<>();
+
+        result.put("headList",headList);
+        result.put("dataList",dataList);
+        return new ResultVO(0,"获取成功",result);
+    }
+
+    public ResultVO updatePostInfo(Post post){
+        if (postDAO.updatePostInfo(post)>0) return new ResultVO(0,"修改成功!",null);
+        return null;
+    }
+
 }

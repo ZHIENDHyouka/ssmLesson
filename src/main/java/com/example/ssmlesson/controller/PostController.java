@@ -5,9 +5,9 @@ import com.example.ssmlesson.pojo.PageVO;
 import com.example.ssmlesson.pojo.ResultVO;
 import com.example.ssmlesson.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.xml.transform.Result;
 
 @RestController
 @CrossOrigin
@@ -24,8 +24,8 @@ public class PostController {
     }
     //http://localhost:8083/post/del
     @RequestMapping("/del")
-    public ResultVO deletePost(int postId){
-        ResultVO resultVO= postService.deletePost(postId);
+    public ResultVO deletePost(int id){
+        ResultVO resultVO= postService.deletePost(id);
         return resultVO;
     }
     //http://localhost:8083/post/udRemark
@@ -55,5 +55,15 @@ public class PostController {
         return pageVo;
     }
 
+    @GetMapping("/queryAllPostInfo")
+    public ResultVO queryAllPostInfo(){
+        return postService.queryAllPostInfo();
+    }
+
+    @PostMapping("/updatePostInfo")
+    public ResultVO updatePostInfo(@RequestBody Post post){
+        ResultVO resultVO = postService.updatePostInfo(post);
+        return resultVO;
+    }
 
 }
