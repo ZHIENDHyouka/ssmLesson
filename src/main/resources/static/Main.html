@@ -23,11 +23,11 @@
                             <i class="el-icon-menu"></i>
                             <span slot="title">岗位管理</span>
                         </el-menu-item>
-                        <el-menu-item index="3">
+                        <el-menu-item index="3" @click="getAllTitleInfo">
                             <i class="el-icon-document"></i>
                             <span slot="title">职称管理</span>
                         </el-menu-item>
-                        <el-menu-item index="4">
+                        <el-menu-item index="4" @click="getAllEmployeeInfo">
                             <i class="el-icon-setting"></i>
                             <span slot="title">员工信息管理</span>
                         </el-menu-item>
@@ -52,9 +52,9 @@
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item icon="el-icon-plus" command="1">增加部门</el-dropdown-item>
                         <el-dropdown-item icon="el-icon-plus" command="2">增加岗位</el-dropdown-item>
-                        <el-dropdown-item icon="el-icon-plus" command="3">螺蛳粉</el-dropdown-item>
-                        <el-dropdown-item icon="el-icon-plus" command="3">双皮奶</el-dropdown-item>
-                        <el-dropdown-item icon="el-icon-plus" command="4">蚵仔煎</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-plus" command="3">增加职称</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-plus" command="4">增加员工</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-plus" command="5">蚵仔煎</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <span style="font-size: 15px">水水水水</span>
@@ -150,11 +150,11 @@
             width="40%"
             :before-close="closePostDialog">
         <el-form :model="changePostInfo" ref="postRuleForm" label-width="100px">
-            <el-form-item label="岗位工资：" >
+            <el-form-item label="岗位工资：">
                 <el-input style="width: 150px;" v-model="changePostInfo.postMoney" placeholder="请输入工资"
                           oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
             </el-form-item>
-            <el-form-item label="岗位介绍：" >
+            <el-form-item label="岗位介绍：">
                 <el-input style="width:400px"
                           type="textarea"
                           :rows="2"
@@ -205,7 +205,57 @@
         </el-form>
         <el-button type="primary" @click="addPost('addPostForm')">添加</el-button>
     </el-dialog>
-
+    <el-dialog
+            title="职称修改"
+            :visible.sync="showTitle"
+            width="40%"
+            :before-close="closeTitleDialog">
+        <el-form :model="changeTileInfo" ref="changeTitleForm" label-width="100px">
+            <el-form-item label="部门工资：" prop="titleMoney">
+                <el-input style="width: 150px;" v-model="changeTileInfo.titleMoney" placeholder="请输入工资"
+                          oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
+            </el-form-item>
+            <el-form-item label="部门介绍：" prop="titleRemark">
+                <el-input style="width:400px"
+                          type="textarea"
+                          :rows="2"
+                          :autosize="{ minRows: 2, maxRows: 2}"
+                          placeholder="请输入内容"
+                          v-model="changeTileInfo.titleRemark">
+                </el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="titleChange">修改</el-button>
+                <el-button @click="titleReset">重置</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+    <el-dialog
+            title="添加职称"
+            :visible.sync="addTitleDialogShow"
+            width="40%"
+            :before-close="addTitleClose">
+        <el-form :model="addTitleForm" :rules="addTitleRules" ref="addTitleForm" label-width="100px"
+                 class="demo-ruleForm">
+            <el-form-item label="职称名称：" prop="titleName">
+                <el-input v-model="addTitleForm.titleName" placeholder="请输入职称名称" style="width: 175px"></el-input>
+            </el-form-item>
+            <el-form-item label="工资收入：" prop="titleMoney">
+                <el-input v-model="addTitleForm.titleMoney" oninput="value=value.replace(/[^\d.]/g,'')"
+                          style="width: 150px" placeholder="请输入工资"></el-input>
+            </el-form-item>
+            <el-form-item label="职称介绍：" prop="titleRemark">
+                <el-input style="width:400px"
+                          type="textarea"
+                          :rows="2"
+                          :autosize="{ minRows: 2, maxRows: 2}"
+                          placeholder="请输入内容"
+                          v-model="addTitleForm.titleRemark">
+                </el-input>
+            </el-form-item>
+        </el-form>
+        <el-button type="primary" @click="addTitle('addTitleForm')">添加</el-button>
+    </el-dialog>
 </div>
 
 <!-- vue -->
@@ -294,7 +344,29 @@
                     depId: null,
                 },
                 deptList: [],
-
+                showTitle: false,
+                changeTileInfo: {
+                    titleId: null,
+                    titleRemark: '',
+                    titleMoney: '',
+                },
+                addTitleDialogShow: false,
+                addTitleForm: {
+                    titleName: '',
+                    titleMoney: '',
+                    titleRemark: '',
+                },
+                addTitleRules: {
+                    titleName: [{
+                        required: true, message: '请输入职称名称', trigger: 'blur'
+                    }],
+                    titleMoney: [{
+                        required: true, message: '请输入工资', trigger: 'blur'
+                    }],
+                    titleRemark: [{
+                        required: true, message: '请输入职称介绍', trigger: 'blur'
+                    }]
+                },
             };
         },
         mounted() {
@@ -329,12 +401,13 @@
                 this.currentPage = val;
             },
             columnStyle() {
-                return "text-align:center"
+                return "text-align:center;"
             },
             tableChange(row) {
                 this.tableRow = row;
                 if (this.index === 1) this.showDepartmentDialog(row);
                 if (this.index === 2) this.showPostDialog(row);
+                if (this.index === 3) this.showTitleDialog(row);
             },
             tableDelete(row) {
                 this.$confirm('此操作将永久删除, 是否继续?', '提示', {
@@ -344,6 +417,7 @@
                 }).then(() => {
                     if (this.index === 1) this.deleteDepartment(row);
                     if (this.index === 2) this.deletePost(row);
+                    if (this.index === 3) this.deleteTitle(row);
                 }).catch(() => {
                 });
 
@@ -404,7 +478,8 @@
             },
             managerAddFunc(command) {
                 if (command === '1') this.addDepartmentDialogShow = true;
-                if (command==='2') this.addPostDialog();
+                if (command === '2') this.addPostDialog();
+                if (command === '3') this.addTitleDialogShow = true;
             },
             addDepartmentClose() {
                 this.addDepartmentDialogShow = false;
@@ -425,7 +500,7 @@
                             if (code !== 1) {
                                 _this.$message.success('添加成功!');
                                 _this.getDepartmentInfo(_this.currentPage);
-                                _this.addDepartmentDialogShow = false;
+                                _this.addDepartmentClose();
                             } else {
                                 _this.$message.error('添加失败！！');
                             }
@@ -461,21 +536,20 @@
                 this.changePostInfo.postRemark = row.postRemark;
                 this.changePostInfo.postId = row.postId;
                 this.showPost = true;
-                console.log(row);
             },
             postChange() {
-                const _this =this;
+                const _this = this;
                 axios({
-                    url:`${_this.url}/post/updatePostInfo`,
-                    method:'post',
-                    data:_this.changePostInfo
-                }).then(function (res){
-                    const code  = res.data.code;
-                    if (code!==1){
+                    url: `${_this.url}/post/updatePostInfo`,
+                    method: 'post',
+                    data: _this.changePostInfo
+                }).then(function (res) {
+                    const code = res.data.code;
+                    if (code !== 1) {
                         _this.$message.success(res.data.msg);
                         _this.getAllPostInfo(_this.currentPage);
-                        _this.showPost=false;
-                    }else {
+                        _this.showPost = false;
+                    } else {
                         _this.$message.error('修改失败!');
                     }
                 });
@@ -511,18 +585,18 @@
                 this.addPostForm.postRemark = '';
                 this.addPostForm.depId = null;
             },
-            addPostDialog(){
-                const _this=this;
-                _this.addPostDialogShow=true;
+            addPostDialog() {
+                const _this = this;
+                _this.addPostDialogShow = true;
                 axios({
-                    url:`${_this.url}/dep/queryAllDeptNameAndId`,
-                    method:'get'
-                }).then(function (res){
+                    url: `${_this.url}/dep/queryAllDeptNameAndId`,
+                    method: 'get'
+                }).then(function (res) {
                     const code = res.data.code;
-                    if (code!=1){
-                        _this.deptList=res.data.data;
-                        _this.addPostDialogShow=true;
-                    }else {
+                    if (code != 1) {
+                        _this.deptList = res.data.data;
+                        _this.addPostDialogShow = true;
+                    } else {
                         _this.$message.error(res.data.msg);
                     }
                 });
@@ -532,20 +606,135 @@
                     if (valid) {
                         const _this = this;
                         axios({
-                            url:`${_this.url}/post/add`,
-                            method:'post',
-                            data:_this.addPostForm,
-                        }).then(function (res){
+                            url: `${_this.url}/post/add`,
+                            method: 'post',
+                            data: _this.addPostForm,
+                        }).then(function (res) {
                             const code = res.data.code;
-                            if (code!==1){
+                            if (code !== 1) {
                                 _this.$message.success("添加成功!");
                                 _this.getAllPostInfo(_this.currentPage);
-                            }else {
+                                _this.addPostClose();
+                            } else {
                                 _this.$message.error("添加失败捏 好像有bUG");
                             }
                         });
                     } else {
                         return false;
+                    }
+                });
+            },
+            getAllTitleInfo(currentPage) {
+                this.index = 3;
+                if (!currentPage) {
+                    this.pageInit();
+                }
+                const _this = this;
+                axios({
+                    url: `${_this.url}/title/queryAllTitleInfo`,
+                    method: 'get'
+                }).then(function (res) {
+                    _this.tableData = res.data.data.dataList;
+                    _this.tableHead = res.data.data.headList;
+                    if (_this.tableData.length === 0) {
+                        _this.$message.warning("暂无数据!");
+                    }
+                });
+            },
+            showTitleDialog(row) {
+                this.changeTileInfo.titleMoney = row.titleMoney;
+                this.changeTileInfo.titleRemark = row.titleRemark;
+                this.changeTileInfo.titleId = row.titleId;
+                this.showTitle = true;
+            },
+            closeTitleDialog() {
+                this.showTitle = false;
+            },
+            titleReset() {
+                this.changeTileInfo.titleMoney = this.tableRow.titleMoney;
+                this.changeTileInfo.titleRemark = this.tableRow.titleRemark;
+            },
+            titleChange() {
+                const _this = this;
+                axios({
+                    url: `${_this.url}/title/updateTitleInfo`,
+                    method: 'post',
+                    data: _this.changeTileInfo
+                }).then(function (res) {
+                    const code = res.data.code;
+                    if (code !== 1) {
+                        _this.$message.success(res.data.msg);
+                        _this.getAllTitleInfo(_this.currentPage);
+                        _this.showTitle = false;
+                    } else {
+                        _this.$message.error('修改失败!');
+                    }
+                });
+            },
+            deleteTitle(row) {
+                const _this = this;
+                axios({
+                    url: `${_this.url}/title/del?id=${row.titleId}`,
+                    method: 'get'
+                }).then(function (res) {
+                    const code = res.data.code
+                    if (code !== 1) {
+                        _this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        _this.getAllTitleInfo(_this.currentPage);
+                    } else {
+                        _this.$message({
+                            type: 'error',
+                            message: '删除失败捏，有bug呢!'
+                        });
+                    }
+                });
+            },
+            addTitleClose() {
+                this.addTitleDialogShow = false;
+                this.addTitleForm.titleMoney = null;
+                this.addTitleForm.titleName = '';
+                this.addTitleForm.titleRemark = '';
+            },
+            addTitle(ref) {
+                this.$refs[ref].validate((valid) => {
+                    if (valid) {
+                        const _this = this;
+                        axios({
+                            url: `${_this.url}/title/add`,
+                            method: 'post',
+                            data: _this.addTitleForm,
+                        }).then(function (res) {
+                            const code = res.data.code;
+                            if (code !== 1) {
+                                _this.$message.success("添加成功!");
+                                _this.getAllTitleInfo(_this.currentPage);
+                                _this.addTitleClose();
+                            } else {
+                                _this.$message.error("添加失败捏 好像有bUG");
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            getAllEmployeeInfo(){
+                this.index = 4;
+                if (!currentPage) {
+                    this.pageInit();
+                }
+                const _this = this;
+                axios({
+                    url: `${_this.url}/emp/queryAllEmpInfo`,
+                    method: 'get'
+                }).then(function (res) {
+                    _this.tableData = res.data.data.dataList;
+                    _this.tableHead = res.data.data.headList;
+                    if (_this.tableData.length === 0) {
+                        _this.$message.warning("暂无数据!");
                     }
                 });
             }

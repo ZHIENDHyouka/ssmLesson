@@ -92,25 +92,29 @@ public class PostService {
     }
 
     public ResultVO queryAllPostInfo(){
-        List<Post> dataList = postDAO.queryAllPostInfo();
+        List<Map<String, Object>> dataList = postDAO.queryAllPostInfo();
         ArrayList<Map<String, Object>> headList = new ArrayList<>();
         HashMap<String, Object> headMap = new HashMap<>();
         headMap.put("id", "postId");
         headMap.put("name", "岗位编号");
         HashMap<String, Object> headMap1 = new HashMap<>();
-        headMap1.put("id", "postName");
-        headMap1.put("name", "岗位名称");
+        headMap1.put("id", "depName");
+        headMap1.put("name", "部门名称");
         HashMap<String, Object> headMap2 = new HashMap<>();
-        headMap2.put("id", "postRemark");
-        headMap2.put("name", "岗位说明");
+        headMap2.put("id", "postName");
+        headMap2.put("name", "岗位名称");
         HashMap<String, Object> headMap3 = new HashMap<>();
-        headMap3.put("id", "postMoney");
-        headMap3.put("name", "岗位工资");
+        headMap3.put("id", "postRemark");
+        headMap3.put("name", "岗位说明");
+        HashMap<String, Object> headMap4 = new HashMap<>();
+        headMap4.put("id", "postMoney");
+        headMap4.put("name", "岗位工资");
 
         headList.add(headMap);
         headList.add(headMap1);
         headList.add(headMap2);
         headList.add(headMap3);
+        headList.add(headMap4);
 
         HashMap<String, Object> result = new HashMap<>();
 

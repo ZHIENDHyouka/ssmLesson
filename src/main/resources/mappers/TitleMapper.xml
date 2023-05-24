@@ -11,11 +11,11 @@
 
     </resultMap>
     <insert id="insertTitle">
-        insert into title(t_id,
-                        t_name,
-                        t_remark,
-                        t_money)
-        values (#{titleId},
+        insert into title(
+                         t_name,
+                          t_remark,
+                          t_money)
+        values (
                 #{titleName},
                 #{titleRemark},
                 #{titleMoney})
@@ -40,6 +40,12 @@
         set t_money= #{m}
         where t_id = #{i};
     </update>
+    <update id="updateTitleMoneyAndRemark">
+        update title
+        set t_money= #{title.titleMoney},
+            t_remark=#{title.titleRemark}
+        where t_id = #{title.titleId};
+    </update>
 
     <select id="selectTitle" resultMap="titleMap">
         select *
@@ -53,6 +59,10 @@
 
     <select id="selectCount" resultType="int">
         select count(1)
+        from title;
+    </select>
+    <select id="queryAllTitleInfo" resultMap="titleMap">
+        select *
         from title;
     </select>
 

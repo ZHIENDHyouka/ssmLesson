@@ -64,9 +64,8 @@
         select count(1)
         from post;
     </select>
-    <select id="queryAllPostInfo" resultMap="postMap">
-        select *
-        from post;
+    <select id="queryAllPostInfo" resultType="java.util.Map">
+        select p.p_id postId,d.dep_name depName,p.p_name postName, p.p_remark postRemark,p.p_money postMoney from post p , dep d where d.dep_id=p.dep_id
     </select>
 
 

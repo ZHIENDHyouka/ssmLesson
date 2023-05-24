@@ -7,6 +7,7 @@ import com.example.ssmlesson.pojo.ResultVO;
 import com.example.ssmlesson.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,6 +55,11 @@ public class EmpController {
     public PageVO selectEmpList(int page , int limit ){
         PageVO pageVo= empService.selectEmpList(page,limit);
         return pageVo;
+    }
+
+    @GetMapping("/queryAllEmpInfo")
+    public ResultVO queryAllEmpInfo(){
+       return empService.queryAllEmpInfo();
     }
 
 }

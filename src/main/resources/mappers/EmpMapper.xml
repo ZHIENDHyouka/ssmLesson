@@ -65,6 +65,11 @@
         select count(1)
         from emp;
     </select>
+    <select id="queryAllEmpInfo" resultType="java.util.Map">
+        select e.e_id empId, e.e_name empName,p.p_name postName,t.t_name titleName,
+               (CASE e.e_sex WHEN 1 THEN '男' WHEN 2 THEN '女' ELSE '其他'END) empSex,
+               e.e_age empAge,e.e_time empTime from emp e LEFT JOIN post p on e.p_id=p.p_id                                                                                                                         LEFT JOIN title t ON e.t_id=t.t_id;
+    </select>
 
 
 </mapper>

@@ -15,5 +15,7 @@ public interface TitleDAO {
     public Title selectTitle(int titleId);
     public List<Title> selectTitleList(@Param("s")  int start , @Param("l") int limit);
     public int selectCount();
+    List<Title> queryAllTitleInfo();
+    int updateTitleMoneyAndRemark(@Param("title") Title title);
 
 }

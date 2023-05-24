@@ -106,5 +106,50 @@ public class EmpService {
         return pageVO;
     }
 
+    public ResultVO queryAllEmpInfo(){
+        List<Map<String, Object>> dataList = empDAO.queryAllEmpInfo();
+        List<Map<String, Object>> headList = new ArrayList<>();
+        HashMap<String, Object> headMap = new HashMap<>();
+        headMap.put("id", "empId");
+        headMap.put("name", "工号");
+
+        HashMap<String, Object> headMap1 = new HashMap<>();
+        headMap1.put("id", "postName");
+        headMap1.put("name", "岗位名称");
+
+        HashMap<String, Object> headMap2 = new HashMap<>();
+        headMap2.put("id", "titleName");
+        headMap2.put("name", "职称");
+
+        HashMap<String, Object> headMap3 = new HashMap<>();
+        headMap3.put("id", "empName");
+        headMap3.put("name", "员工姓名");
+
+        HashMap<String, Object> headMap4 = new HashMap<>();
+        headMap4.put("id", "empSex");
+        headMap4.put("name", "员工性别");
+
+        HashMap<String, Object> headMap5 = new HashMap<>();
+        headMap5.put("id", "empAge");
+        headMap5.put("name", "员工年龄");
+
+        HashMap<String, Object> headMap6 = new HashMap<>();
+        headMap6.put("id", "empTime");
+        headMap6.put("name", "入职时间");
+
+        headList.add(headMap);
+        headList.add(headMap1);
+        headList.add(headMap2);
+        headList.add(headMap3);
+        headList.add(headMap4);
+        headList.add(headMap5);
+
+        HashMap<String, Object> result = new HashMap<>();
+
+        result.put("headList", headList);
+        result.put("dataList", dataList);
+        return new ResultVO(0,"查询成功",result);
+    }
+
 
 }

@@ -5,9 +5,7 @@ import com.example.ssmlesson.pojo.PageVO;
 import com.example.ssmlesson.pojo.ResultVO;
 import com.example.ssmlesson.service.TitleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -18,14 +16,14 @@ public class TitleController {
 
     //http://localhost:8083/title/add
     @RequestMapping("/add")
-    public ResultVO addTitle(Title title){
+    public ResultVO addTitle(@RequestBody Title title){
         ResultVO resultVO= titleService.addTitle(title);
         return resultVO;
     }
     //http://localhost:8083/title/del
     @RequestMapping("/del")
-    public ResultVO deleteTitle(int titleId){
-        ResultVO resultVO= titleService.deleteTitle(titleId);
+    public ResultVO deleteTitle(int id){
+        ResultVO resultVO= titleService.deleteTitle(id);
         return resultVO;
     }
     //http://localhost:8083/title/udRemark
@@ -53,6 +51,17 @@ public class TitleController {
     public PageVO selectTitleList(int page , int limit ){
         PageVO pageVo= titleService.selectTitleList(page,limit);
         return pageVo;
+    }
+
+    @GetMapping("/queryAllTitleInfo")
+    public ResultVO queryAllTitleInfo(){
+        ResultVO resultVO = titleService.queryAllTitleInfo();
+        return resultVO;
+    }
+
+    @PostMapping("/updateTitleInfo")
+    public ResultVO updateTitleInfo(@RequestBody Title title){
+        return titleService.updateTitleInfo(title);
     }
 
 

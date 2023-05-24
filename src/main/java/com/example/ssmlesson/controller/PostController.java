@@ -18,7 +18,7 @@ public class PostController {
 
     //http://localhost:8083/post/add
     @RequestMapping("/add")
-    public ResultVO addPost(Post post){
+    public ResultVO addPost(@RequestBody Post post){
         ResultVO resultVO= postService.addPost(post);
         return resultVO;
     }

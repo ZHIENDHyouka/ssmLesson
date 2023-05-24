@@ -87,6 +87,34 @@ public class TitleService {
         return pageVO;
     }
 
+    public ResultVO queryAllTitleInfo(){
+        List<Title> dataList = titleDAO.queryAllTitleInfo();
+        ArrayList<Map<String, Object>> headList = new ArrayList<>();
+        HashMap<String, Object> headMap = new HashMap<>();
+        headMap.put("id", "titleName");
+        headMap.put("name", "职称名称");
+        HashMap<String, Object> headMap1 = new HashMap<>();
+        headMap1.put("id", "titleRemark");
+        headMap1.put("name", "职称说明");
+        HashMap<String, Object> headMap2 = new HashMap<>();
+        headMap2.put("id", "titleMoney");
+        headMap2.put("name", "职称工资");
+
+        headList.add(headMap);
+        headList.add(headMap1);
+        headList.add(headMap2);
+
+        HashMap<String, Object> result = new HashMap<>();
+
+        result.put("headList",headList);
+        result.put("dataList",dataList);
+        return new ResultVO(0,"成功",result);
+    }
+
+    public ResultVO updateTitleInfo(Title title){
+        if (titleDAO.updateTitleMoneyAndRemark(title)>0) return new ResultVO(0,"修改成功!",null);
+        return null;
+    }
 
 
 
