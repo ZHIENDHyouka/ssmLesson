@@ -18,8 +18,9 @@ public interface EmpDAO {
     public Emp selectEmp(int empId);
     public List<Emp> selectEmpList(@Param("s")  int start , @Param("l") int limit);
     public int selectCount();
-    @MapKey("id")
+    @MapKey("e_id")
     List<Map<String,Object>> queryAllEmpInfo();
+    int updateEmpInfo(@Param("emp") Emp emp);
 
 
 }

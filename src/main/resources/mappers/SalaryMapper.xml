@@ -41,6 +41,9 @@
         select count(1)
         from salary;
     </select>
+    <select id="queryAllSalaryInfo" resultType="java.util.Map">
+        select s.e_id empId,e.e_name empName,s.s_all salaryAll from salary s ,emp e where s.e_id=e.e_id;
+    </select>
 
 
 </mapper>

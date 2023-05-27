@@ -15,14 +15,17 @@
         insert into kq(e_id,
                        k_y,
                        k_m,
-                       k_all
-                       )
+                       k_all)
         values (#{empId},
                 #{kqY},
                 #{kqM},
-                #{kqAll}
-                )
+                1)
     </insert>
+    <update id="updateKqAllInt">
+        update kq
+        set k_all=k_all + 1
+        WHERE k_id = #{id};
+    </update>
 
     <delete id="deleteKq">
         delete
@@ -45,6 +48,18 @@
     <select id="selectCount" resultType="int">
         select count(1)
         from kq;
+    </select>
+    <select id="queryAllKqInfo" resultType="java.util.Map">
+        select k.k_id kqId, e.e_name empName, k.k_y kqY, k.k_m kqM, k.k_all kqAll
+        from kq k,
+             emp e
+        where k.e_id = e.e_id;
+    </select>
+    <select id="queryEmpKq" resultMap="kqMap">
+        select k_id
+        from kq
+        where e_id = #{kq.empId},k_y=#{kq.kqY}
+            , k_m=#{kq.kqM};
     </select>
 
 

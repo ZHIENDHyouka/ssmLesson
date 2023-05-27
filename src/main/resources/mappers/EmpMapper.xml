@@ -15,14 +15,14 @@
     </resultMap>
 
     <insert id="insertEmp">
-        insert into emp(e_id,
+        insert into emp(
                         p_id,
                         t_id,
                         e_name,
                         e_sex,
                         e_age,
                         e_time)
-        values (#{empId},
+        values (
                 #{postId},
                 #{titleId},
                 #{empName},
@@ -48,6 +48,10 @@
         update emp
         set p_id = #{p}
         where e_id = #{e};
+    </update>
+    <update id="updateEmpInfo">
+        update emp set p_id=#{emp.postId},t_id=#{emp.titleId},e_name = #{emp.empName},e_sex=#{emp.empSex},e_age=#{emp.empAge},e_time=#{emp.empTime}
+        where e_id = #{emp.empId};
     </update>
 
     <select id="selectEmp" resultMap="empMap">

@@ -1,6 +1,8 @@
 package com.example.ssmlesson.service;
 
 import com.example.ssmlesson.dao.EmpDAO;
+import com.example.ssmlesson.dao.PostDAO;
+import com.example.ssmlesson.dao.TitleDAO;
 import com.example.ssmlesson.pojo.Dep;
 import com.example.ssmlesson.pojo.Emp;
 import com.example.ssmlesson.pojo.PageVO;
@@ -17,6 +19,10 @@ import java.util.Map;
 public class EmpService {
     @Autowired
     private EmpDAO empDAO;
+    @Autowired
+    private PostDAO postDAO;
+    @Autowired
+    private TitleDAO titleDAO;
 
     public ResultVO addEmp(Emp emp) {
         int a = empDAO.insertEmp(emp);
@@ -149,6 +155,20 @@ public class EmpService {
         result.put("headList", headList);
         result.put("dataList", dataList);
         return new ResultVO(0,"查询成功",result);
+    }
+
+    public ResultVO getEmpPostAndTitle(){
+        List<Map<String, Object>> titleList = titleDAO.queryTitleIdName();
+        List<Map<String, Object>> postList = postDAO.queryPostIdName();
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("titleList",titleList);
+        result.put("postList",postList);
+        return  new ResultVO(0,"获取成功",result);
+    }
+
+    public ResultVO updateEmployeeInfo(Emp emp){
+        if (empDAO.updateEmpInfo(emp)>0)  return new ResultVO(0,"修改成功",null);
+        return null;
     }
 
 

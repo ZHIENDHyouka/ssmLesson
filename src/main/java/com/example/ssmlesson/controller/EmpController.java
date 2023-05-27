@@ -6,10 +6,7 @@ import com.example.ssmlesson.pojo.PageVO;
 import com.example.ssmlesson.pojo.ResultVO;
 import com.example.ssmlesson.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -20,7 +17,7 @@ public class EmpController {
 
     //http://localhost:8083/emp/add
     @RequestMapping("/add")
-    public ResultVO addEmp(Emp emp){
+    public ResultVO addEmp(@RequestBody  Emp emp){
         ResultVO resultVO= empService.addEmp(emp);
         return resultVO;
     }
@@ -62,4 +59,13 @@ public class EmpController {
        return empService.queryAllEmpInfo();
     }
 
+    @GetMapping("/getEmpPostAndTitle")
+    public ResultVO getEmpPostAndTitle(){
+        return empService.getEmpPostAndTitle();
+    }
+
+    @PostMapping("/updateEmployeeInfo")
+    public ResultVO updateEmployeeInfo(@RequestBody Emp emp){
+        return empService.updateEmployeeInfo(emp);
+    }
 }

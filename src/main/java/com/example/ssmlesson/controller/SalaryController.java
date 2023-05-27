@@ -8,6 +8,7 @@ import com.example.ssmlesson.service.KqService;
 import com.example.ssmlesson.service.SalaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,6 +42,11 @@ public class SalaryController {
     public PageVO selectKqList(int page , int limit ){
         PageVO pageVo= salaryService.selectSList(page,limit);
         return pageVo;
+    }
+
+    @GetMapping("/queryAllSalaryInfo")
+    public ResultVO queryAllSalaryInfo(){
+        return salaryService.queryAllSalaryInfo();
     }
 
 }

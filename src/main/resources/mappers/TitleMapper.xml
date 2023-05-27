@@ -65,6 +65,9 @@
         select *
         from title;
     </select>
+    <select id="queryTitleIdName" resultType="java.util.Map">
+        select t_id `value`, t_name label from title;
+    </select>
 
 
 </mapper>

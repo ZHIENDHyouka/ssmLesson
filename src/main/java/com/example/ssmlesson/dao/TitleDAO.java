@@ -1,10 +1,12 @@
 package com.example.ssmlesson.dao;
 
 import com.example.ssmlesson.pojo.Title;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface TitleDAO {
@@ -17,5 +19,7 @@ public interface TitleDAO {
     public int selectCount();
     List<Title> queryAllTitleInfo();
     int updateTitleMoneyAndRemark(@Param("title") Title title);
+    @MapKey("t_id")
+    List<Map<String,Object>> queryTitleIdName();
 
 }

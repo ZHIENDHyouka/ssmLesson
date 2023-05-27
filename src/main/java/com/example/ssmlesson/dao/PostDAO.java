@@ -2,6 +2,7 @@ package com.example.ssmlesson.dao;
 
 import com.example.ssmlesson.pojo.Post;
 import javafx.geometry.Pos;
+import jdk.jfr.Name;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,6 +22,8 @@ public interface PostDAO {
     @MapKey("id")
     List<Map<String,Object>> queryAllPostInfo();
     int updatePostInfo(@Param("post")Post post);
+    @MapKey("p_id")
+    List<Map<String,Object>> queryPostIdName();
 
 
 }

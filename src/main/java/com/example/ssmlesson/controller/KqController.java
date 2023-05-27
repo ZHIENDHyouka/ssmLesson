@@ -5,9 +5,9 @@ import com.example.ssmlesson.pojo.PageVO;
 import com.example.ssmlesson.pojo.ResultVO;
 import com.example.ssmlesson.service.KqService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -18,14 +18,14 @@ public class KqController {
 
     //http://localhost:8083/kq/add
     @RequestMapping("/add")
-    public ResultVO addKq(Kq kq){
-        ResultVO resultVO= kqService.addKq(kq);
+    public ResultVO addKq(@RequestBody Map addMap){
+        ResultVO resultVO= kqService.addKq(addMap);
         return resultVO;
     }
     //http://localhost:8083/kq/del
     @RequestMapping("/del")
-    public ResultVO deleteKq(int kqId){
-        ResultVO resultVO= kqService.deleteKq(kqId);
+    public ResultVO deleteKq(int id){
+        ResultVO resultVO= kqService.deleteKq(id);
         return resultVO;
     }
     //http://localhost:8083/kq/selectKq
@@ -39,6 +39,11 @@ public class KqController {
     public PageVO selectKqList(int page , int limit ){
         PageVO pageVo= kqService.selectKqList(page,limit);
         return pageVo;
+    }
+
+    @GetMapping("/queryAllKqInfo")
+    public ResultVO queryAllKqInfo(){
+        return kqService.queryAllKqInfo();
     }
 
 }

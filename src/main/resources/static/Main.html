@@ -8,7 +8,7 @@
 <body>
 <div id="app">
     <el-container class="mainContainer">
-        <el-aside class="mainAside">
+        <el-aside class="mainAside" style="width: 195px;">
             <el-row class="tac">
                 <el-col :span="12" style="width: 100%">
                     <h5>默认颜色</h5>
@@ -31,12 +31,12 @@
                             <i class="el-icon-setting"></i>
                             <span slot="title">员工信息管理</span>
                         </el-menu-item>
-                        <el-menu-item index="5">
+                        <el-menu-item index="5" @click="getAllKqInfo">
                             <i class="el-icon-setting"></i>
                             <span slot="title">考勤管理</span>
                         </el-menu-item>
                         <el-menu-item index="6">
-                            <i class="el-icon-setting"></i>
+                            <i class="el-icon-setting" @click="getAllSalary"></i>
                             <span slot="title">工资管理</span>
                         </el-menu-item>
                     </el-menu>
@@ -54,7 +54,8 @@
                         <el-dropdown-item icon="el-icon-plus" command="2">增加岗位</el-dropdown-item>
                         <el-dropdown-item icon="el-icon-plus" command="3">增加职称</el-dropdown-item>
                         <el-dropdown-item icon="el-icon-plus" command="4">增加员工</el-dropdown-item>
-                        <el-dropdown-item icon="el-icon-plus" command="5">蚵仔煎</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-plus" command="5">增加考勤</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-plus" command="6">增加工资记录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <span style="font-size: 15px">水水水水</span>
@@ -73,7 +74,9 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button size="mini" type="primary" @click="tableChange(scope.row)">修改</el-button>
+                            <el-button size="mini" v-show="index!==5" type="primary" @click="tableChange(scope.row)">
+                                修改
+                            </el-button>
                             <el-button size="mini" type="danger" @click="tableDelete(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
@@ -256,6 +259,164 @@
         </el-form>
         <el-button type="primary" @click="addTitle('addTitleForm')">添加</el-button>
     </el-dialog>
+    <el-dialog
+            title="修改员工信息"
+            :visible.sync="showEmployee"
+            width="40%"
+            :before-close="closeEmployeeDialog">
+        <el-form :model="changeEmployee" ref="changeEmployeeForm" label-width="100px">
+            <el-form-item label="岗位选择：" prop="postId">
+                <el-select v-model="changeEmployee.postId" clearable placeholder="请选择">
+                    <el-option
+                            v-for="item in postList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="职称选择：">
+                <el-select v-model="changeEmployee.titileId" clearable placeholder="请选择">
+                    <el-option
+                            v-for="item in titleList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="员工姓名：">
+                <el-input style="width: 150px;" v-model="changeEmployee.empName" placeholder="请输入员工姓名"></el-input>
+            </el-form-item>
+            <el-form-item label="性别选择：">
+                <el-select v-model="changeEmployee.empSex" clearable placeholder="请选择">
+                    <el-option
+                            v-for="item in sexList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="员工年龄：">
+                <el-input v-model="changeEmployee.empAge" oninput="value=value.replace(/[^0-9]/g,'')"
+                          style="width: 150px" placeholder="请输入年龄"></el-input>
+            </el-form-item>
+            <el-form-item label="入职时间：">
+                <el-date-picker
+                        v-model="changeEmployee.empTime"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="employeeChange">修改</el-button>
+                <el-button @click="employeeReset">重置</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+
+    <el-dialog
+            title="添加员工信息"
+            :visible.sync="showAddEmployee"
+            width="40%"
+            :before-close="closeAddEmployeeDialog">
+        <el-form :model="addEmployee" ref="addEmployeeForm" :rules="addEmployeeRules" label-width="100px">
+            <el-form-item label="岗位选择：" prop="postId">
+                <el-select v-model="addEmployee.postId" clearable placeholder="请选择">
+                    <el-option
+                            v-for="item in postList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="职称选择：" prop="titileId">
+                <el-select v-model="addEmployee.titileId" clearable placeholder="请选择">
+                    <el-option
+                            v-for="item in titleList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="员工姓名：" prop="empName">
+                <el-input style="width: 150px;" v-model="addEmployee.empName" placeholder="请输入员工姓名"></el-input>
+            </el-form-item>
+            <el-form-item label="性别选择：" prop="empSex">
+                <el-select v-model="addEmployee.empSex" clearable placeholder="请选择">
+                    <el-option
+                            v-for="item in sexList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="员工年龄：" prop="empAge">
+                <el-input v-model="addEmployee.empAge" oninput="value=value.replace(/[^0-9]/g,'')"
+                          style="width: 150px" placeholder="请输入年龄"></el-input>
+            </el-form-item>
+            <el-form-item label="入职时间：" prop="empTime">
+                <el-date-picker
+                        v-model="addEmployee.empTime"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="addEmployeeInfo('addEmployeeForm')">添加</el-button>
+                <!--                <el-button @click="employeeReset">重置</el-button>-->
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+    <el-dialog
+            title="添加考勤信息"
+            :visible.sync="addKqDialogShow"
+            width="40%"
+            :before-close="addKqClose">
+        <el-form :model="addKqForm" :rules="addKqFormRules" ref="addKqForm" label-width="100px"
+                 class="demo-ruleForm">
+            <el-form-item label="员工id：" prop="empId">
+                <el-input v-model="addKqForm.empId" oninput="value=value.replace(/[^\d.]/g,'')"
+                          style="width: 150px" placeholder="请输入员工id"></el-input>
+            </el-form-item>
+            <el-form-item label="日期：" prop="kyDate">
+                <el-date-picker
+                        v-model="addKqForm.kyDate"
+                        type="month"
+                        format="yyyy 年 MM 月 "
+                        value-format="yyyy-MM"
+                        placeholder="选择月">
+                </el-date-picker>
+            </el-form-item>
+        </el-form>
+        <el-button type="primary" @click="adKq('addKqForm')">添加</el-button>
+    </el-dialog>
+    <el-dialog
+            title="添加工资"
+            :visible.sync="addSalaryDialogShow"
+            width="40%"
+            :before-close="addSalaryClose">
+        <el-form :model="addSalaryForm" :rules="addSalaryFormRules" ref="addSalaryForm" label-width="100px"
+                 class="demo-ruleForm">
+            <el-form-item label="员工id：" prop="empId">
+                <el-input v-model="addSalaryForm.empId" oninput="value=value.replace(/[^\d.]/g,'')"
+                          style="width: 150px" placeholder="请输入员工id"></el-input>
+            </el-form-item>
+            <el-form-item label="考勤id：" prop="empId">
+                <el-input v-model="addSalaryForm.kqId" oninput="value=value.replace(/[^\d.]/g,'')"
+                          style="width: 150px" placeholder="请输入考勤id"></el-input>
+            </el-form-item>
+        </el-form>
+        <el-button type="primary" @click="adSalary('addSalaryForm')">添加</el-button>
+    </el-dialog>
 </div>
 
 <!-- vue -->
@@ -334,6 +495,26 @@
                         required: true, message: '请输入部门介绍', trigger: 'blur'
                     }]
                 },
+                addEmployeeRules: {
+                    postId: [{
+                        required: true, message: '请选择岗位', trigger: 'blur'
+                    }],
+                    titileId: [{
+                        required: true, message: '请选择职称', trigger: 'blur'
+                    }],
+                    empName: [{
+                        required: true, message: '请输入员工姓名', trigger: 'blur'
+                    }],
+                    empAge: [{
+                        required: true, message: '请输入员工年龄', trigger: 'blur'
+                    }],
+                    empSex: [{
+                        required: true, message: '请选择性别', trigger: 'blur'
+                    }],
+                    empTime: [{
+                        required: true, message: '请输入入职时间', trigger: 'blur'
+                    }]
+                },
                 showPost: false,
                 addPostDialogShow: false,
                 addPostForm: {
@@ -367,6 +548,53 @@
                         required: true, message: '请输入职称介绍', trigger: 'blur'
                     }]
                 },
+                showEmployee: false,
+                changeEmployee: {
+                    postId: null,
+                    titileId: null,
+                    empName: '',
+                    empSex: '',
+                    empAge: null,
+                    empTime: '',
+                },
+                postList: [],
+                titleList: [],
+                sexList: [{
+                    label: '男',
+                    value: 1
+                }, {
+                    label: '女',
+                    value: 2,
+                }],
+                showAddEmployee: false,
+                addEmployee: {
+                    postId: null,
+                    titileId: null,
+                    empName: '',
+                    empSex: '',
+                    empAge: null,
+                    empTime: '',
+                    // changeButtonStatus:true,
+                },
+                addKqDialogShow: false,
+                addKqForm: {
+                    empId: null,
+                    kyDate: '',
+                },
+                addKqFormRules: {
+                    empId: [{
+                        required: true, message: '请输入员工id', trigger: 'blur'
+                    }],
+                    kyDate: [{
+                        required: true, message: '请输入日期', trigger: 'blur'
+                    }],
+                },
+                addSalaryDialogShow: false,
+                addSalaryForm: {
+                    empId: '',
+                    kqId: '',
+                }
+
             };
         },
         mounted() {
@@ -408,6 +636,7 @@
                 if (this.index === 1) this.showDepartmentDialog(row);
                 if (this.index === 2) this.showPostDialog(row);
                 if (this.index === 3) this.showTitleDialog(row);
+                if (this.index === 4) this.showEmployeeDialog(row);
             },
             tableDelete(row) {
                 this.$confirm('此操作将永久删除, 是否继续?', '提示', {
@@ -418,6 +647,9 @@
                     if (this.index === 1) this.deleteDepartment(row);
                     if (this.index === 2) this.deletePost(row);
                     if (this.index === 3) this.deleteTitle(row);
+                    if (this.index === 4) this.deleteEmployee(row);
+                    if (this.index === 5) this.deleteKq(row);
+                    if (this.index === 6) this.deleteSalary(row);
                 }).catch(() => {
                 });
 
@@ -480,6 +712,9 @@
                 if (command === '1') this.addDepartmentDialogShow = true;
                 if (command === '2') this.addPostDialog();
                 if (command === '3') this.addTitleDialogShow = true;
+                if (command === '4') this.addEmployeeDialog();
+                if (command === '5') this.addKqDialogShow = true;
+                if (command === '6') this.addSalaryDialogShow = true;
             },
             addDepartmentClose() {
                 this.addDepartmentDialogShow = false;
@@ -721,7 +956,7 @@
                     }
                 });
             },
-            getAllEmployeeInfo(){
+            getAllEmployeeInfo(currentPage) {
                 this.index = 4;
                 if (!currentPage) {
                     this.pageInit();
@@ -735,6 +970,257 @@
                     _this.tableHead = res.data.data.headList;
                     if (_this.tableData.length === 0) {
                         _this.$message.warning("暂无数据!");
+                    }
+                });
+            },
+            deleteEmployee(row) {
+                const _this = this;
+                axios({
+                    url: `${_this.url}/emp/del?id=${row.empId}`,
+                    method: 'get'
+                }).then(function (res) {
+                    const code = res.data.code
+                    if (code !== 1) {
+                        _this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        _this.getAllEmployeeInfo(_this.currentPage);
+                    } else {
+                        _this.$message({
+                            type: 'error',
+                            message: '删除失败捏，有bug呢!'
+                        });
+                    }
+                });
+            },
+            showEmployeeDialog(row) {
+                this.changeEmployee.empName = row.empName;
+                this.changeEmployee.empSex = row.empSex;
+                this.changeEmployee.empAge = row.empAge;
+                this.changeEmployee.empTime = row.empTime;
+                this.changeEmployee.empId = row.empId;
+                // console.log(row);
+                const _this = this;
+                axios({
+                    url: `${_this.url}/emp/getEmpPostAndTitle`,
+                    method: 'get',
+                }).then(function (res) {
+                    _this.postList = res.data.data.postList;
+                    _this.titleList = res.data.data.titleList;
+                    _this.changeEmployee.postId = _this.nameChangeId(row.postName, _this.postList);
+                    _this.changeEmployee.titileId = _this.nameChangeId(row.titleName, _this.titleList);
+                    _this.tableRow = JSON.parse(JSON.stringify(_this.changeEmployee));
+                    // console.log(_this.changeEmployee);
+                    _this.showEmployee = true;
+                });
+            },
+            nameChangeId(name, list) {
+                for (const item of list) {
+                    if (item.label === name) return item.value;
+                }
+            },
+            closeEmployeeDialog() {
+                this.showEmployee = false;
+            },
+            employeeChange() {
+                // console.log(this.changeEmployee);
+                const _this = this;
+                axios({
+                    url: `${_this.url}/emp/updateEmployeeInfo`,
+                    method: 'post',
+                    data: _this.changeEmployee
+                }).then(function (res) {
+                    const code = res.data.code;
+                    if (code !== 1) {
+                        _this.$message.success(res.data.msg);
+                        _this.getAllEmployeeInfo(_this.currentPage);
+                        _this.showEmployee = false;
+                    } else {
+                        _this.$message.error('修改失败!');
+                    }
+                });
+            },
+            employeeReset() {
+                // console.log(this.tableRow);
+                this.changeEmployee = JSON.parse(JSON.stringify(this.tableRow));
+            },
+            closeAddEmployeeDialog() {
+                this.showAddEmployee = false;
+                this.addEmployee.titileId = null;
+                this.addEmployee.postId = null;
+                this.addEmployee.empName = '';
+                this.addEmployee.empSex = '';
+                this.addEmployee.empAge = null;
+                this.addEmployee.empTime = '';
+            },
+            addEmployeeInfo(ref) {
+                this.$refs[ref].validate((valid) => {
+                    if (valid) {
+                        console.log(this.addEmployee);
+                        const _this = this;
+                        axios({
+                            url: `${_this.url}/emp/add`,
+                            method: 'post',
+                            data: _this.addEmployee,
+                        }).then(function (res) {
+                            const code = res.data.code;
+                            if (code !== 1) {
+                                _this.$message.success("添加成功!");
+                                _this.getAllEmployeeInfo(_this.currentPage);
+                                _this.closeAddEmployeeDialog();
+                            } else {
+                                _this.$message.error("添加失败捏 好像有bUG");
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            addEmployeeDialog() {
+                const _this = this;
+                axios({
+                    url: `${_this.url}/emp/getEmpPostAndTitle`,
+                    method: 'get',
+                }).then(function (res) {
+                    _this.postList = res.data.data.postList;
+                    _this.titleList = res.data.data.titleList;
+                    _this.showAddEmployee = true;
+                });
+            },
+            getAllKqInfo(currentPage) {
+                this.index = 5;
+                // this.changeButtonStatus=false;
+                if (!currentPage) {
+                    this.pageInit();
+                }
+                const _this = this;
+                axios({
+                    url: `${_this.url}/kq/queryAllKqInfo`,
+                    method: 'get'
+                }).then(function (res) {
+                    _this.tableData = res.data.data.dataList;
+                    _this.tableHead = res.data.data.headList;
+                    if (_this.tableData.length === 0) {
+                        _this.$message.warning("暂无数据!");
+                    }
+                });
+            },
+            deleteKq(row) {
+                const _this = this;
+                axios({
+                    url: `${_this.url}/kq/del?id=${row.kqId}`,
+                    method: 'get'
+                }).then(function (res) {
+                    const code = res.data.code
+                    if (code !== 1) {
+                        _this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        _this.getAllEmployeeInfo(_this.currentPage);
+                    } else {
+                        _this.$message({
+                            type: 'error',
+                            message: '删除失败捏，有bug呢!'
+                        });
+                    }
+                });
+            },
+            addKqClose() {
+                this.addKqForm.empId = null;
+                this.addKqForm.kyDate = '';
+                this.addKqDialogShow = false;
+            },
+            adKq(ref) {
+                this.$refs[ref].validate((valid) => {
+                    if (valid) {
+                        console.log(this.addKqForm);
+                        const _this = this;
+                        axios({
+                            url: `${_this.url}/kq/add`,
+                            method: 'post',
+                            data: _this.addKqForm,
+                        }).then(function (res) {
+                            const code = res.data.code;
+                            if (code !== 1) {
+                                _this.$message.success("添加成功!");
+                                _this.getAllKqInfo(_this.currentPage);
+                                _this.addKqClose();
+                            } else {
+                                _this.$message.error("添加失败捏 好像有bUG");
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            getAllSalary(currentPage) {
+                this.index = 6;
+                // this.changeButtonStatus=false;
+                if (!currentPage) {
+                    this.pageInit();
+                }
+                const _this = this;
+                axios({
+                    url: `${_this.url}/salary/queryAllSalaryInfo`,
+                    method: 'get'
+                }).then(function (res) {
+                    _this.tableData = res.data.data.dataList;
+                    _this.tableHead = res.data.data.headList;
+                    if (_this.tableData.length === 0) {
+                        _this.$message.warning("暂无数据!");
+                    }
+                });
+            },
+            deleteSalary(row) {
+                const _this = this;
+                axios({
+                    url: `${_this.url}/salary/del?id=${row.salaryId}`,
+                    method: 'get'
+                }).then(function (res) {
+                    const code = res.data.code
+                    if (code !== 1) {
+                        _this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        _this.getAllSalary(_this.currentPage);
+                    } else {
+                        _this.$message({
+                            type: 'error',
+                            message: '删除失败捏，有bug呢!'
+                        });
+                    }
+                });
+            },
+            addSalaryClose() {
+                this.addSalaryForm.empId = '';
+                this.addSalaryForm.kqId = '';
+                this.addSalaryDialogShow = false;
+            },
+            adSalary() {
+                this.$refs[ref].validate((valid) => {
+                    if (valid) {
+                        const _this = this;
+                        axios({
+                            url: `${_this.url}/salary/add`,
+                            method: 'post',
+                            data: _this.addSalaryForm,
+                        }).then(function (res) {
+                            const code = res.data.code;
+                            if (code !== 1) {
+                                _this.$message.success("添加成功!");
+                                _this.getAllSalary(_this.currentPage);
+                                _this.addSalaryClose();
+                            } else {
+                                _this.$message.error("添加失败捏 好像有bUG");
+                            }
+                        });
+                    } else {
+                        return false;
                     }
                 });
             }

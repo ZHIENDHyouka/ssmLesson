@@ -68,9 +68,9 @@ public class SalaryService {
         }
 
     }
-    public PageVO selectSList(int page, int limit){
-        int start= (page-1)*limit;
-        List<Salary> list = salaryDAO.selectSList(start,limit);
+    public PageVO selectSList(int page, int limit) {
+        int start = (page - 1) * limit;
+        List<Salary> list = salaryDAO.selectSList(start, limit);
 
         ArrayList<Map<String, Object>> headList = new ArrayList<>();
         HashMap<String, Object> headMap = new HashMap<>();
@@ -90,11 +90,36 @@ public class SalaryService {
 
         HashMap<String, Object> result = new HashMap<>();
 
-        result.put("head",headList);
-        result.put("data",list);
-        int count=salaryDAO.selectCount();
-        PageVO pageVO=new PageVO(0,"查询成功",result,count);
+        result.put("head", headList);
+        result.put("data", list);
+        int count = salaryDAO.selectCount();
+        PageVO pageVO = new PageVO(0, "查询成功", result, count);
         return pageVO;
+    }
+
+    public ResultVO queryAllSalaryInfo(){
+        List<Map<String, Object>> dataList = salaryDAO.queryAllSalaryInfo();
+        ArrayList<Map<String, Object>> headList = new ArrayList<>();
+        HashMap<String, Object> headMap = new HashMap<>();
+        headMap.put("id", "empId");
+        headMap.put("name", "员工id");
+        HashMap<String, Object> headMap1 = new HashMap<>();
+        headMap1.put("id", "empName");
+        headMap1.put("name", "员工姓名");
+        HashMap<String, Object> headMap2 = new HashMap<>();
+        headMap2.put("id", "salaryAll");
+        headMap2.put("name", "应发工资");
+
+
+        headList.add(headMap);
+        headList.add(headMap1);
+        headList.add(headMap2);
+
+        HashMap<String, Object> result = new HashMap<>();
+
+        result.put("headList", headList);
+        result.put("dataList", dataList);
+        return new ResultVO(0,"成功",result);
     }
 
 
