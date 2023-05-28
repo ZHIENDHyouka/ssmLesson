@@ -277,7 +277,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="职称选择：">
-                <el-select v-model="changeEmployee.titileId" clearable placeholder="请选择">
+                <el-select v-model="changeEmployee.titleId" clearable placeholder="请选择">
                     <el-option
                             v-for="item in titleList"
                             :key="item.value"
@@ -553,7 +553,7 @@
                 showEmployee: false,
                 changeEmployee: {
                     postId: null,
-                    titileId: null,
+                    titleId: null,
                     empName: '',
                     empSex: '',
                     empAge: null,
@@ -562,12 +562,13 @@
                 postList: [],
                 titleList: [],
                 sexList: [{
-                    label: '男',
-                    value: 1
+                    value: 1,
+                    label: '男'
                 }, {
-                    label: '女',
-                    value: 0,
+                    value: 2,
+                    label: '女'
                 }],
+
                 showAddEmployee: false,
                 addEmployee: {
                     postId: null,
@@ -1008,7 +1009,9 @@
             },
             showEmployeeDialog(row) {
                 this.changeEmployee.empName = row.empName;
-                this.changeEmployee.empSex = row.empSex;
+                if (row.empSex === '男')
+                    this.changeEmployee.empSex = 1;
+                else this.changeEmployee.empSex = 2;
                 this.changeEmployee.empAge = row.empAge;
                 this.changeEmployee.empTime = row.empTime;
                 this.changeEmployee.empId = row.empId;
@@ -1021,7 +1024,7 @@
                     _this.postList = res.data.data.postList;
                     _this.titleList = res.data.data.titleList;
                     _this.changeEmployee.postId = _this.nameChangeId(row.postName, _this.postList);
-                    _this.changeEmployee.titileId = _this.nameChangeId(row.titleName, _this.titleList);
+                    _this.changeEmployee.titleId = _this.nameChangeId(row.titleName, _this.titleList);
                     _this.tableRow = JSON.parse(JSON.stringify(_this.changeEmployee));
                     // console.log(_this.changeEmployee);
                     _this.showEmployee = true;
@@ -1036,7 +1039,7 @@
                 this.showEmployee = false;
             },
             employeeChange() {
-                // console.log(this.changeEmployee);
+                console.log(this.changeEmployee);
                 const _this = this;
                 axios({
                     url: `${_this.url}/emp/updateEmployeeInfo`,
@@ -1059,7 +1062,7 @@
             },
             closeAddEmployeeDialog() {
                 this.showAddEmployee = false;
-                this.addEmployee.titileId = null;
+                this.addEmployee.titleId = null;
                 this.addEmployee.postId = null;
                 this.addEmployee.empName = '';
                 this.addEmployee.empSex = '';
