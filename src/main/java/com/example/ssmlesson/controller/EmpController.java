@@ -23,8 +23,8 @@ public class EmpController {
     }
     //http://localhost:8083/emp/del
     @RequestMapping("/del")
-    public ResultVO deleteEmp(int empId){
-        ResultVO resultVO= empService.deleteEmp(empId);
+    public ResultVO deleteEmp(int id){
+        ResultVO resultVO= empService.deleteEmp(id);
         return resultVO;
     }
     //http://localhost:8083/emp/udPost

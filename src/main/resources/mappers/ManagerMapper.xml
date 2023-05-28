@@ -17,7 +17,9 @@
         where m_name = #{username}
 
     </select>
-
+    <select id="queryManagerRealName" resultMap="managerMap">
+        select m_realname from manager where m_id=#{id};
+    </select>
 
 
 </mapper>

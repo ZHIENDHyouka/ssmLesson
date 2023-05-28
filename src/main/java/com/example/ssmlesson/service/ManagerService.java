@@ -28,7 +28,7 @@ public class ManagerService {
             //对输入密码进行加密
             managerPsw= MD5Utils.md5(managerPsw);
             if (managerPsw.equals(pwd)) {
-                return new ResultVO(0, "登陆成功",null);
+                return new ResultVO(0, "登陆成功",manager.getManagerRealName());
             } else {
                 return new ResultVO(1, "密码错误", null);
             }

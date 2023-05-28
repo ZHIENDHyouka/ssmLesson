@@ -7,10 +7,7 @@ import com.example.ssmlesson.pojo.Salary;
 import com.example.ssmlesson.service.KqService;
 import com.example.ssmlesson.service.SalaryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -21,14 +18,14 @@ public class SalaryController {
 
     //http://localhost:8083/salary/add
     @RequestMapping("/add")
-    public ResultVO addKq(Salary salary){
+    public ResultVO addKq(@RequestBody Salary salary){
         ResultVO resultVO= salaryService.addS(salary);
         return resultVO;
     }
     //http://localhost:8083/salary/del
     @RequestMapping("/del")
-    public ResultVO deleteS(int salaryId){
-        ResultVO resultVO= salaryService.deleteS(salaryId);
+    public ResultVO deleteS(int id){
+        ResultVO resultVO= salaryService.deleteS(id);
         return resultVO;
     }
     //http://localhost:8083/salary/selectS

@@ -17,7 +17,7 @@ public class KqService {
     private KqDAO kqDAO;
 
     public ResultVO addKq(Map<String, Object> addMap) {
-        int empId = (int) addMap.get("empId");
+        int empId = Integer.parseInt(addMap.get("empId").toString());
         String kyDate = addMap.get("kyDate").toString();
         String[] split = kyDate.split("-");
         Integer year = Integer.parseInt(split[0]);

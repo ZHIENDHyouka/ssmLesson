@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface ManagerDAO {
 
      Manager selectManager(@Param("username") String username);
+     Manager queryManagerRealName(@Param("id")int id);
 
 }

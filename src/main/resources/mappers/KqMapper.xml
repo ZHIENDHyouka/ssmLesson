@@ -58,8 +58,9 @@
     <select id="queryEmpKq" resultMap="kqMap">
         select k_id
         from kq
-        where e_id = #{kq.empId},k_y=#{kq.kqY}
-            , k_m=#{kq.kqM};
+        where e_id = #{kq.empId}
+          and k_y = #{kq.kqY}
+          and k_m = #{kq.kqM};
     </select>
 
 

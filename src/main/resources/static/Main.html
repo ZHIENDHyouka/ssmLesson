@@ -35,8 +35,8 @@
                             <i class="el-icon-setting"></i>
                             <span slot="title">考勤管理</span>
                         </el-menu-item>
-                        <el-menu-item index="6">
-                            <i class="el-icon-setting" @click="getAllSalary"></i>
+                        <el-menu-item index="6 " @click="getAllSalary">
+                            <i class="el-icon-setting"></i>
                             <span slot="title">工资管理</span>
                         </el-menu-item>
                     </el-menu>
@@ -58,7 +58,7 @@
                         <el-dropdown-item icon="el-icon-plus" command="6">增加工资记录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <span style="font-size: 15px">水水水水</span>
+                <span style="font-size: 15px">{{managerName}}</span>
             </el-header>
             <el-main>
                 <el-table
@@ -74,7 +74,8 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button size="mini" v-show="index!==5" type="primary" @click="tableChange(scope.row)">
+                            <el-button size="mini" v-show="index!==5&&index!==6" type="primary"
+                                       @click="tableChange(scope.row)">
                                 修改
                             </el-button>
                             <el-button size="mini" type="danger" @click="tableDelete(scope.row)">删除</el-button>
@@ -334,8 +335,8 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="职称选择：" prop="titileId">
-                <el-select v-model="addEmployee.titileId" clearable placeholder="请选择">
+            <el-form-item label="职称选择：" prop="titleId">
+                <el-select v-model="addEmployee.titleId" clearable placeholder="请选择">
                     <el-option
                             v-for="item in titleList"
                             :key="item.value"
@@ -384,7 +385,7 @@
         <el-form :model="addKqForm" :rules="addKqFormRules" ref="addKqForm" label-width="100px"
                  class="demo-ruleForm">
             <el-form-item label="员工id：" prop="empId">
-                <el-input v-model="addKqForm.empId" oninput="value=value.replace(/[^\d.]/g,'')"
+                <el-input v-model="addKqForm.empId" oninput="value=value.replace(/[^0-9]/g,'')"
                           style="width: 150px" placeholder="请输入员工id"></el-input>
             </el-form-item>
             <el-form-item label="日期：" prop="kyDate">
@@ -407,15 +408,15 @@
         <el-form :model="addSalaryForm" :rules="addSalaryFormRules" ref="addSalaryForm" label-width="100px"
                  class="demo-ruleForm">
             <el-form-item label="员工id：" prop="empId">
-                <el-input v-model="addSalaryForm.empId" oninput="value=value.replace(/[^\d.]/g,'')"
+                <el-input v-model="addSalaryForm.empId" oninput="value=value.replace(/[^0-9]/g,'')"
                           style="width: 150px" placeholder="请输入员工id"></el-input>
             </el-form-item>
-            <el-form-item label="考勤id：" prop="empId">
-                <el-input v-model="addSalaryForm.kqId" oninput="value=value.replace(/[^\d.]/g,'')"
+            <el-form-item label="考勤id：" prop="kqId">
+                <el-input v-model="addSalaryForm.kqId" oninput="value=value.replace(/[^0-9]/g,'')"
                           style="width: 150px" placeholder="请输入考勤id"></el-input>
             </el-form-item>
         </el-form>
-        <el-button type="primary" @click="adSalary('addSalaryForm')">添加</el-button>
+        <el-button type="primary" @click="addSalary('addSalaryForm')">添加</el-button>
     </el-dialog>
 </div>
 
@@ -433,6 +434,7 @@
         data() {
             return {
                 url: `http://localhost:8083`,
+                managerName: '啊啊',
                 tableHead: [{
                     name: '时间',
                     id: 'date',
@@ -499,7 +501,7 @@
                     postId: [{
                         required: true, message: '请选择岗位', trigger: 'blur'
                     }],
-                    titileId: [{
+                    titleId: [{
                         required: true, message: '请选择职称', trigger: 'blur'
                     }],
                     empName: [{
@@ -569,7 +571,7 @@
                 showAddEmployee: false,
                 addEmployee: {
                     postId: null,
-                    titileId: null,
+                    titleId: null,
                     empName: '',
                     empSex: '',
                     empAge: null,
@@ -593,12 +595,22 @@
                 addSalaryForm: {
                     empId: '',
                     kqId: '',
+                },
+                addSalaryFormRules: {
+                    empId: [{
+                        required: true, message: '请输入员工id', trigger: 'blur'
+                    }],
+                    kqId: [{
+                        required: true, message: '请输入考勤id', trigger: 'blur'
+                    }],
                 }
 
             };
         },
         mounted() {
             this.getDepartmentInfo();
+            // this.managerName = window.location.href.split("=")[1];
+            // console.log(this.managerName)
         },
         methods: {
             pageInit() {
@@ -1201,7 +1213,7 @@
                 this.addSalaryForm.kqId = '';
                 this.addSalaryDialogShow = false;
             },
-            adSalary() {
+            addSalary(ref) {
                 this.$refs[ref].validate((valid) => {
                     if (valid) {
                         const _this = this;
