@@ -2,7 +2,7 @@ package com.example.ssmlesson.dao;
 
 import com.example.ssmlesson.pojo.Post;
 import javafx.geometry.Pos;
-import jdk.jfr.Name;
+
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

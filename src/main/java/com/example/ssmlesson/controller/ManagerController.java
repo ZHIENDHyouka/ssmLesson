@@ -19,6 +19,13 @@ public class ManagerController {
         ResultVO resultVO =managerService.login(manager.getUsername(),manager.getPassword());
         return  resultVO;
     }
+    //http://localhost:8083/manager/login1
+    @RequestMapping("/login1")
+    public ResultVO login1( Manager manager){
+        ResultVO resultVO =managerService.login(manager.getUsername(),manager.getPassword());
+        return  resultVO;
+    }
+
 
 
 }
